@@ -11,3 +11,7 @@ Finish code layout for access page.
 ## 4 Sleep
 
 ## 5 Code rest of access page
+
+## 6 eat dinner
+
+## 7 see some cartoon again

@@ -1,0 +1,7 @@
+{
+  "port": 9000,
+  "watch": true,
+  "static": "public",
+  "routes": "routes.json",
+  "delay": 500
+}
