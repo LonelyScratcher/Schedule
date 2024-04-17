@@ -1,0 +1,49 @@
+{
+  "name": "front-end",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^5.3.6",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "antd": "^4.24.16",
+    "axios": "^1.6.8",
+    "craco-less": "^2.1.0-alpha.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-dropzone-uploader": "^2.11.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "5.0.1",
+    "simplemde": "^1.9.0",
+    "codemirror": "codemirror/CodeMirror"
+  },
+  "scripts": {
+    "mock": "json-server mock.js",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@craco/craco": "alpha",
+    "craco-less": "^2.1.0-alpha.0",
+    "customize-cra": "^1.0.0",
+    "json-server": "^0.17.4",
+    "less": "^4.2.0",
+    "less-loader": "^7.3.0",
+    "react-app-rewired": "^2.2.1"
+  }
+}

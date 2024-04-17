@@ -1,0 +1,98 @@
+.search-container{
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  border-radius: 10px 10px 0 0;
+  padding-top: 60px;
+  background-color: #F2F2F2;
+  .main{
+    display: flex;
+    margin-top: 15px;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    min-height: 100%;
+    border-radius: 5px;
+    flex-direction: column;
+
+    .top{
+      box-sizing: border-box;
+      padding: 15px;
+      width: 100%;
+      background-color: #FDFDFD;
+      border-radius: 5px;
+      border-bottom: 1px solid gainsboro;
+      .btn-tag{
+        margin-right: 20px;
+      }
+    }
+    /*
+    此处最好设置min-height：100%，但是
+    有问题，会参考main的height导致显示太多内容
+    此处用100%也可以，过多的话会自行扩展得到滚动条
+     */
+    .center{
+      display: flex;
+      box-sizing: border-box;
+      flex-direction: row;
+      margin-top: 15px;
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+      .blog-list{
+        box-sizing: border-box;
+        width: 75%;
+        min-height: 100%;
+        background-color: #F2F2F2;
+        padding-right: 15px;
+        border: 1px solid #F2F2F2;
+        .blog-item{
+          padding: 15px;
+          display: flex;
+          border-bottom: 1px solid #F2F2F2;
+          background-color: #FFFFFF;
+          .info{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+            .info-footer{
+              display: flex;
+              justify-content: space-between;
+              span{
+                display: inline-block;
+                margin-right: 15px;
+              }
+            }
+          }
+          .cover{
+            width: 200px;
+            height: 90px;
+          }
+        }
+      }
+      .recommend-list{
+        width: 25%;
+        background-color: #FFFFFF;
+        height: 300px;
+        .recommend-top{
+          padding: 15px;
+          font-size: 20px;
+          border-bottom: 1px solid #F2F2F2;
+        }
+
+        .recommend-content{
+          display: flex;
+          flex-direction: column;
+          .item{
+            padding: 15px;
+            .order{
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

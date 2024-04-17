@@ -1,0 +1,52 @@
+.blog-list-container{
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  .blog-item{
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid gainsboro;
+    &.first{
+      border-top: 1px solid gainsboro;
+    }
+    img{
+      width: 140px;
+      height: 90px;
+    }
+    .detail{
+      width: 100%;
+      margin-left: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .title{
+        font-weight: 500;
+        font-size: 19px;
+      }
+      .body{
+        width: 80%;
+        font-size: 14px;
+      }
+      .footer{
+        font-size: 14px ;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .left{
+          span{
+            margin-right: 20px;
+            .tag{
+              font-size: 14px;
+            }
+          }
+        }
+        .right{
+          a{
+            margin-left: 15px;
+          }
+        }
+      }
+    }
+  }
+}
