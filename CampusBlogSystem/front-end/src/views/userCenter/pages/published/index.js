@@ -26,6 +26,9 @@ export default function WaitVerifyBlog(){
     const handleCheck = (data) => {
         history.push("/user-center/rewrite",data)
     }
+    const handleEdit = (data) => {
+        history.push("/user-center/rewrite",data)
+    }
     return (
         <div className="blog-list-container">
             {
@@ -45,6 +48,12 @@ export default function WaitVerifyBlog(){
                                         handleCheck(item)
                                     }}>
                                         查看
+                                    </a>
+                                    <a onClick={(e)=>{
+                                        e.preventDefault()
+                                        handleEdit(item)
+                                    }}>
+                                        编辑
                                     </a>
                                     <a onClick={(e)=>{
                                         e.preventDefault()
