@@ -14,7 +14,17 @@ export const accessList = () =>{
 }
 
 export const commentList = (params) =>{
-    return request.get('/commentList',{
+    return request.get('/comment/commentList',{
+        params
+    })
+}
+
+export const rewrite = (data) =>{
+    return request.post('/comment/rewrite',data)
+}
+
+export const remove = (params) =>{
+    return request.delete('/comment/remove',{
         params
     })
 }

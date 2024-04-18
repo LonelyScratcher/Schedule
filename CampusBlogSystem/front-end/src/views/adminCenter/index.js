@@ -40,6 +40,14 @@ export default function AdminCenter(){
                 { label: '审核博客', key: '/admin-center/verify-blog' },
             ],
         },
+        {
+            label: '评论管理',
+            key: '/admin-center/self',
+            children: [
+                { label: '评论列表', key: '/admin-center/browse-blog' },
+                { label: '审核评论', key: '/admin-center/verify-blog' },
+            ],
+        },
     ];
     //components
     const avatarMenu = (

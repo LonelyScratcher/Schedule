@@ -2,6 +2,7 @@ package com.example.blog.service.impl;
 import java.util.Date;
 
 import com.example.blog.dao.BlogRepository;
+import com.example.blog.dao.CommentAuditRepository;
 import com.example.blog.dao.CommentRepository;
 import com.example.blog.domain.pojo.Blog;
 import com.example.blog.domain.pojo.Comment;
@@ -25,6 +26,8 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     BlogRepository blogRepository;
 
+    @Autowired
+    CommentAuditRepository commentAuditRepository;
     @Override
     public void insertComment(Comment comment) {
         commentRepository.save(comment);
@@ -44,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentVo> list(int userId) {
-        List<Comment> commentList = commentRepository.findByUserId(userId);
+        List<Comment> commentList = commentRepository.findByUserIdAndStateNot(userId,Constant.APPROVED_ADOPT);
         List<CommentVo> commentVoList = new ArrayList<>();
         for (Comment comment:commentList){
             CommentVo commentVo = plusInfo(comment);
@@ -70,6 +73,25 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> commentList(int blogId) {
         List<Comment> commentList = commentRepository.findByBlogId(blogId);
         return commentList;
+    }
+
+    @Override
+    public void rewrite(Comment comment) {
+        int commentId = comment.getId();
+        Comment target = commentRepository.findById(commentId).orElse(null);
+        if (target==null) throw new BusinessException(Code.BUSINESS_ERR,"重新提交评论失败！");
+        int state = target.getState();
+        if (state==Constant.APPROVED_REFUSE) {
+            commentAuditRepository.removeByCommentId(commentId);
+            target.setState(Constant.PEND_REVIEW);
+        }
+        target.setContent(comment.getContent());
+        commentRepository.save(target);
+    }
+
+    @Override
+    public void remove(int commentId) {
+        commentRepository.deleteById(commentId);
     }
 
 }

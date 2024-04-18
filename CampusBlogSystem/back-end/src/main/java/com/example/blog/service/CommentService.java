@@ -14,4 +14,8 @@ public interface CommentService {
     List<CommentVo> accessList(int userId);
 
     List<Comment> commentList(int blogId);
+
+    void rewrite(Comment comment);
+
+    void remove(int commentId);
 }

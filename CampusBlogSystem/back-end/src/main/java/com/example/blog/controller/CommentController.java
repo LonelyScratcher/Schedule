@@ -49,4 +49,17 @@ public class CommentController {
         List<Comment> commentList = commentService.commentList(blogId);
         return new Result(Code.REQUEST_OK,commentList);
     }
+
+    @PostMapping("/rewrite")
+    public Result rewrite(@RequestBody Comment comment){
+        commentService.rewrite(comment);
+        return new Result(Code.REQUEST_OK,true);
+    }
+
+    @DeleteMapping("/remove")
+    public Result remove(@RequestParam("commentId") int commentId){
+        commentService.remove(commentId);
+        return new Result(Code.REQUEST_OK,true);
+    }
+
 }
