@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import {list} from "@/api/blog";
 import CONSTANT from "@/util/constant";
 import {useHistory} from "react-router-dom";
+import Good from "@/components/icons/good";
 
 function AuthorItem(props){
     const {name,description} = props
@@ -43,12 +44,10 @@ function BlogItem(props){
                 <img src={CONSTANT.COVER_PREFIX+coverUrl} alt="封面"/>
                 <div className="item-content">
                     <h3>{title}</h3>
-                    <p className="content">{partContent(content)}</p>
+                    <p className="content">{content}</p>
                     <div className="item-footer">
-                        <span className="clear">3</span>
-                        <span>点赞</span>
-                        <span>踩</span>
-                        <span>作者</span>
+                        <Good size={17}/>
+                        <span className="username">作者：小明</span>
                     </div>
                 </div>
             </div>
@@ -60,7 +59,6 @@ function BlogItem(props){
 function Home(){
     const [blogList,setBlogList] = useState([])
     const tags = ['推荐','关注','前端','后端','移动开发','编程语言']
-    const history = useHistory()
     const author = {
         name:'张三',
         description:'描述...'

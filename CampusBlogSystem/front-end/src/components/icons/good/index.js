@@ -1,9 +1,10 @@
 import {useState} from "react";
 
-export default function Good(){
+export default function Good(props){
+    let {size} = props
     const [num,setNum] = useState(0)
     const [isGood,setIsGood] = useState(false)
-    const size = 22
+    if (!size) size = 22
     const color = isGood?"#FC5531":"#999AAA"
     const handleClick = () =>{
         const nextVal = !isGood
