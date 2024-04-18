@@ -1,5 +1,4 @@
 import {Button} from "antd";
-import image01 from '@/assets/images/image01.png'
 import HomeLayout from "@/components/homeLayout";
 import './index.less'
 import {useEffect, useState} from "react";
@@ -7,12 +6,13 @@ import {list} from "@/api/blog";
 import CONSTANT from "@/util/constant";
 import {useHistory} from "react-router-dom";
 import Good from "@/components/icons/good";
+import avatar from '@/assets/images/avatar.jpg'
 
 function AuthorItem(props){
     const {name,description} = props
     return (
         <div className="author-item">
-            <img src={image01}/>
+            <img src={avatar}/>
             <div className="author-info">
                 <h3 className="red">{name}</h3>
                 <span>{description}</span>
@@ -25,13 +25,8 @@ function AuthorItem(props){
 
 function BlogItem(props){
     const {blog} = props
-    const {coverUrl,title,content} = blog
+    const {id,coverUrl,title,content,author,goodNum,good} = blog
     const history = useHistory()
-    const partContent = (content) =>{
-        const max = 87
-        if (content.length>max) return content.slice(0,max)+'......'
-        return content
-    }
     const handleCheck = () =>{
         const data = {
             blog
@@ -46,8 +41,8 @@ function BlogItem(props){
                     <h3>{title}</h3>
                     <p className="content">{content}</p>
                     <div className="item-footer">
-                        <Good size={17}/>
-                        <span className="username">作者：小明</span>
+                        <Good size={17} goodNum={goodNum} isGood={good} blogId={id}/>
+                        <span className="username">作者：{author}</span>
                     </div>
                 </div>
             </div>
@@ -71,6 +66,7 @@ function Home(){
     useEffect(()=>{
         list().then(data=>{
             if (!data) return
+            console.log(data)
             setBlogList(data)
         })
     },blogList)

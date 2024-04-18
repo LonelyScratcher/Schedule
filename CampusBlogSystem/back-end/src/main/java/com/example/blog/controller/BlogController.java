@@ -3,6 +3,7 @@ package com.example.blog.controller;
 
 import com.example.blog.dao.BlogRepository;
 import com.example.blog.domain.pojo.Blog;
+import com.example.blog.domain.vo.BlogVo;
 import com.example.blog.exception.BusinessException;
 import com.example.blog.service.BlogService;
 import com.example.blog.util.Code;
@@ -52,10 +53,24 @@ public class BlogController {
         return new Result(Code.REQUEST_OK,blogList);
     }
 
+    //fetch list of blog with author describe
     @GetMapping("/list")
-    public Result list(){
-        List<Blog> blogList = blogService.list();
-        return new Result(Code.REQUEST_OK,blogList);
+    public Result list(HttpServletRequest request){
+        String userIdStr = request.getHeader("userId");
+        int userId = 0;
+        if (userIdStr != null) userId = Integer.parseInt(userIdStr);
+        List<BlogVo> blogVoList = blogService.list(userId);
+        return new Result(Code.REQUEST_OK,blogVoList);
+    }
+
+    @PostMapping("/good")
+    public Result switchGood(HttpServletRequest request,@RequestParam("blogId") Integer blogId){
+        String userIdStr = request.getHeader("userId");
+        int userId = 0;
+        if (userIdStr != null) userId = Integer.parseInt(userIdStr);
+        if (userId==0) throw new BusinessException(Code.BUSINESS_ERR,"未登录不可操作！");
+        boolean isGood = blogService.switchGood(userId, blogId);
+        return new Result(Code.REQUEST_OK,isGood);
     }
 
     @GetMapping("/searchList")
@@ -71,6 +86,7 @@ public class BlogController {
         List<Blog> blogList = blogService.waitVerify(Integer.parseInt(userId));
         return new Result(Code.REQUEST_OK,blogList);
     }
+
 
     @GetMapping("/cover/{imageName}")
     public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws IOException {

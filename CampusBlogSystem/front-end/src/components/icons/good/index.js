@@ -1,16 +1,25 @@
 import {useState} from "react";
+import {message} from "antd";
+import {switchGood} from "@/api/blog";
 
 export default function Good(props){
-    let {size} = props
-    const [num,setNum] = useState(0)
-    const [isGood,setIsGood] = useState(false)
+    let {size,goodNum,blogId} = props
+    const [num,setNum] = useState(goodNum)
+    const [isGood,setIsGood] = useState(props.isGood)
     if (!size) size = 22
     const color = isGood?"#FC5531":"#999AAA"
-    const handleClick = () =>{
+    const handleClick = (e) =>{
+        e.stopPropagation();
         const nextVal = !isGood
-        if (nextVal) setNum(preNum=>preNum+1)
-        else setNum(preNum=>preNum-1)
-        setIsGood(preIsGood=>!preIsGood)
+        switchGood({blogId}).then(data=>{
+            if (nextVal !== data) return
+            if (nextVal) message.success('点赞成功！')
+            else message.success('取消点赞成功！')
+            if (nextVal) setNum(preNum=>preNum+1)
+            else setNum(preNum=>preNum-1)
+            setIsGood(preIsGood=>!preIsGood)
+        })
+
     }
     return (
         <div className="icon-container">

@@ -14,7 +14,7 @@ import TextArea from "antd/es/input/TextArea";
 export default function Access(){
     const {state} = useLocation()
     const [open, setOpen] = useState(false);
-    const blog = state?.blog || {title:'',content:'',tagName:'',date:''}
+    const blog = state?.blog || {title:'',content:'',tagName:'',date:'',author:''}
     const generalAttr = [
         {name:'博客数', value:0},
         {name:'总访问', value:0}
@@ -54,7 +54,7 @@ export default function Access(){
                             <div className="author-container">
                                 <div className="avatar-container">
                                     <img src={avatar} alt="头像"/>
-                                    <span>username</span>
+                                    <span>{blog.author}</span>
                                 </div>
                                 <div className="general-attr">
                                     {

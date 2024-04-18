@@ -25,3 +25,10 @@ export const searchList = (params) => {
         params
     })
 }
+
+
+export const switchGood = (params) => {
+    return request.post('/blog/good',null,{
+        params
+    })
+}

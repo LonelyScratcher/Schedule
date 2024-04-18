@@ -1,6 +1,7 @@
 package com.example.blog.service;
 
 import com.example.blog.domain.pojo.Blog;
+import com.example.blog.domain.vo.BlogVo;
 
 import java.util.List;
 
@@ -9,7 +10,9 @@ public interface BlogService {
 
     List<Blog> waitVerify(int userId);
 
-    List<Blog> list();
+    List<BlogVo> list(int curUserId);
 
     List<Blog> searchText(String searchText);
+
+    boolean switchGood(int userId,int blogId);
 }
