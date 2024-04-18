@@ -22,4 +22,5 @@ public class Blog {
     private String tagName;
     private String coverUrl;
     private int state;
+    private int access;
 }

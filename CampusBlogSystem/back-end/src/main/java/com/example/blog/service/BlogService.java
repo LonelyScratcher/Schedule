@@ -15,4 +15,6 @@ public interface BlogService {
     List<Blog> searchText(String searchText);
 
     boolean switchGood(int userId,int blogId);
+
+    void increaseAccess(int blogId);
 }

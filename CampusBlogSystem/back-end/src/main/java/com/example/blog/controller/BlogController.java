@@ -63,6 +63,13 @@ public class BlogController {
         return new Result(Code.REQUEST_OK,blogVoList);
     }
 
+    @GetMapping("/access")
+    public Result access(@RequestParam("blogId") int blogId){
+        blogService.increaseAccess(blogId);
+        return new Result(Code.REQUEST_OK,true);
+    }
+
+
     @PostMapping("/good")
     public Result switchGood(HttpServletRequest request,@RequestParam("blogId") Integer blogId){
         String userIdStr = request.getHeader("userId");

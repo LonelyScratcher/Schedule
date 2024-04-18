@@ -32,3 +32,9 @@ export const switchGood = (params) => {
         params
     })
 }
+
+export const access = (params) => {
+    return request.get('/blog/access',{
+        params
+    })
+}

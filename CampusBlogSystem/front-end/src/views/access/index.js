@@ -2,31 +2,50 @@ import './index.less'
 import HomeLayout from "@/components/homeLayout";
 import avatar from '@/assets/images/avatar.jpg'
 import {useLocation} from "react-router-dom";
-import {dateStr} from "@/util";
+import {dateStr, getUser} from "@/util";
 import {useEffect, useState} from "react";
 import {marked} from "marked";
 import Good from "@/components/icons/good";
 import Collection from "@/components/icons/collection";
 import Comment from "@/components/icons/comment";
 import {RightOutlined} from "@ant-design/icons";
-import {Button, Drawer} from "antd";
-import TextArea from "antd/es/input/TextArea";
+import {Button, Drawer, message} from "antd";
+import {getAuthorInfo} from "@/api/user";
+import {access} from "@/api/blog";
+import {insert} from "@/api/comment";
+const generalAttr = [
+    {name:'博客数', value:0},
+    {name:'总访问', value:0}
+]
+const detailAttr = [
+    {name:'获赞', value:0},
+    {name:'评论', value:0},
+]
+const initAuthorInfo = {generalAttr,detailAttr}
 export default function Access(){
     const {state} = useLocation()
     const [open, setOpen] = useState(false);
-    const blog = state?.blog || {title:'',content:'',tagName:'',date:'',author:''}
-    const generalAttr = [
-        {name:'博客数', value:0},
-        {name:'总访问', value:0}
-    ]
-    const detailAttr = [
-        {name:'获赞', value:0},
-        {name:'评论', value:0},
-        {name:'收藏', value:0},
-    ]
+    const blog = state?.blog || {title:'',content:'',tagName:'',
+        date:'',author:'',goodNum:0,good:false,commentList:[]}
+    const [authorInfo,setAuthorInfo] = useState(initAuthorInfo)
+    const {generalAttr,detailAttr} = authorInfo;
+    const commentList = blog.commentList
+    const [commentInput,setCommentInput] = useState("");
+
     useEffect(()=>{
         document.getElementById('md-body').innerHTML = marked.parse(blog.content);
     },[])
+    useEffect(()=>{
+        getAuthorInfo().then(data=>{
+            if (!data) return
+            setAuthorInfo(data)
+        })
+    },[authorInfo])
+
+    useEffect(()=>{
+        access({blogId: blog.id}).then(()=>{})
+    },[])
+
     const handleClickComment = () =>{
         showDrawer()
     }
@@ -38,13 +57,29 @@ export default function Access(){
         setOpen(false);
     };
 
-    const commentList = [
-        {author:'小明',content:'评论内容'},
-        {author:'小明',content:'评论内容'},
-        {author:'小明',content:'评论内容'},
-        {author:'小明',content:'评论内容'},
-        {author:'小明',content:'评论内容'},
-    ]
+    const handleInput = (e) =>{
+        setCommentInput(e.target.value)
+    }
+
+    const submitComment = () =>{
+        const user = getUser()
+        console.log(user)
+        if (commentInput==='') {
+            message.error('评论内容不能为空！')
+            return
+        }
+        const comment = {
+            userId:user.id,
+            blogId:blog.id,
+            content:commentInput,
+            date:new Date()
+        }
+        insert(comment).then(data=>{
+            if (!data) return
+            if (data) message.success('提交评论成功，请等待审核！')
+        })
+    }
+
     return (
         <>
             <HomeLayout>
@@ -94,31 +129,36 @@ export default function Access(){
                                 </div>
                                 <div id="md-body" className="blog-content"/>
                                 <div className="bottom-describe">
-                                    <Good/>
+                                    <Good goodNum={blog.goodNum} isGood={blog.good} blogId={blog.id}/>
                                     <Collection/>
                                     <Comment/>
                                 </div>
                             </div>
                             <div className="comment-container">
-                                <span className="comment-num">8 条评论</span>
+                                <span className="comment-num">{commentList.length} 条评论</span>
                                 <RightOutlined style={{fontSize:'14px'}}/>
-                                <img src={avatar}/>
-                                <span className="username">username</span>
-                                <span className="content">评论内容</span>
+                                {
+                                    commentList.length>0&&
+                                    <>
+                                        <img src={avatar}/>
+                                        <span className="username">username</span>
+                                        <span className="content">评论内容</span>
+                                    </>
+                                }
                                 <Button onClick={handleClickComment} className="btn">写评论</Button>
                             </div>
                         </div>
                     </div>
                 </div>
             </HomeLayout>
-            <Drawer width={450} title="评论 8" placement="right" onClose={onClose} open={open}>
+            <Drawer width={450} title={`评论 ${commentList.length}`} placement="right" onClose={onClose} open={open}>
                 <div className="right-comment-container">
                     <div className="comment-input-area">
                         <img src={avatar}/>
                         <div className="input-area">
-                            <textarea/>
+                            <textarea value={commentInput} onChange={handleInput}/>
                             <div className="footer">
-                                <span>评论</span>
+                                <span onClick={submitComment}>评论</span>
                             </div>
                         </div>
                     </div>

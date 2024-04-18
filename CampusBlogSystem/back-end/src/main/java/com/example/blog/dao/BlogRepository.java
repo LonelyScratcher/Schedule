@@ -14,4 +14,6 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     List<Blog> findBlogsByState(int state);
 
     List<Blog> findBlogsByStateAndTitleContaining(int state,String searchText);
+
+
 }

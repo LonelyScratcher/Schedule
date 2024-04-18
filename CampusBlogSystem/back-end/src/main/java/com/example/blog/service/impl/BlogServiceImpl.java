@@ -90,4 +90,13 @@ public class BlogServiceImpl implements BlogService {
         }
         return !isGood;
     }
+
+    @Override
+    public void increaseAccess(int blogId) {
+        Blog blog = blogRepository.findById(blogId).orElse(null);
+        if (blog==null) throw new BusinessException(Code.BUSINESS_ERR,"未查询到博客数据");
+        int access = blog.getAccess();
+        blog.setAccess(access+1);
+        blogRepository.save(blog);
+    }
 }

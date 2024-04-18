@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Entity
 public class Comment {
@@ -13,8 +15,9 @@ public class Comment {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-
     int blogId;
     int userId;
+    int state;
     String content;
+    Date date;
 }

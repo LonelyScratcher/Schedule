@@ -8,16 +8,19 @@ import UserHome from "@/views/userCenter/pages/home";
 import Published from "@/views/userCenter/pages/published";
 import WaitVerify from "@/views/userCenter/pages/waitVerify";
 import Write from "@/views/userCenter/pages/write";
+import CommentView from "@/views/userCenter/pages/commentView";
+import CommentWait from "@/views/userCenter/pages/commentWait";
 
 
 export default function UserCenter(){
     const history = useHistory()
     const user = getUser()
+    const homePath = "/user-center/comment-wait"
+
     const goHome = (e) =>{
         e.preventDefault()
         history.push('/home')
     }
-
     const loginOut = (e) =>{
         e.preventDefault()
         removeUser()
@@ -38,6 +41,14 @@ export default function UserCenter(){
                 { label: '我的博客', key: '/user-center/published' },
                 { label: '我的提交', key: '/user-center/wait-verify' },
                 { label: '写博客', key: '/user-center/write' }
+            ],
+        },
+        {
+            label: '评论管理',
+            key: '/user-center/self',
+            children: [
+                { label: '我的评论', key: '/user-center/comment-view' },
+                { label: '我的提交', key: '/user-center/comment-wait' },
             ],
         },
     ];
@@ -98,7 +109,7 @@ export default function UserCenter(){
                 </div>
                 <div className="backstage-content">
                     <Route path="/user-center">
-                        <Redirect to="/user-center/write"/>
+                        <Redirect to={homePath}/>
                     </Route>
                     <Route path="/user-center/home">
                         <UserHome/>
@@ -114,6 +125,12 @@ export default function UserCenter(){
                     </Route>
                     <Route path="/user-center/rewrite">
                         <Write/>
+                    </Route>
+                    <Route path="/user-center/comment-view">
+                        <CommentView/>
+                    </Route>
+                    <Route path="/user-center/comment-wait">
+                        <CommentWait/>
                     </Route>
                 </div>
             </div>
