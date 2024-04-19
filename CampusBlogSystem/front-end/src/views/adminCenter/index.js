@@ -9,11 +9,14 @@ import VerifyBlog from "@/views/adminCenter/pages/verifyBlog";
 import BrowseBlog from "@/views/adminCenter/pages/browseBlog";
 import VerifyDetail from "@/views/adminCenter/pages/verifyDetail";
 import VerifyCheck from "@/views/adminCenter/pages/verifyCheck";
+import CommentVerify from "@/views/adminCenter/pages/commentVerify";
+import CommentBrowse from "@/views/adminCenter/pages/commentBrowse";
 
 
 export default function AdminCenter(){
     const history = useHistory()
     const user = getUser()
+    const homePath = "/admin-center/comment-verify"
     const goHome = (e) =>{
         e.preventDefault()
         history.push('/home')
@@ -44,8 +47,8 @@ export default function AdminCenter(){
             label: '评论管理',
             key: '/admin-center/self',
             children: [
-                { label: '评论列表', key: '/admin-center/browse-blog' },
-                { label: '审核评论', key: '/admin-center/verify-blog' },
+                { label: '评论列表', key: '/admin-center/comment-browse' },
+                { label: '审核评论', key: '/admin-center/comment-verify' },
             ],
         },
     ];
@@ -105,7 +108,7 @@ export default function AdminCenter(){
                 </div>
                 <div className="backstage-content">
                     <Route path="/admin-center">
-                        <Redirect to="/admin-center/verify-blog"/>
+                        <Redirect to={homePath}/>
                     </Route>
                     <Route path="/admin-center/home">
                         <AdminHome/>
@@ -121,6 +124,15 @@ export default function AdminCenter(){
                     </Route>
                     <Route path="/admin-center/verify-check">
                         <VerifyCheck/>
+                    </Route>
+                    <Route path="/admin-center/verify-detail">
+                        <VerifyDetail/>
+                    </Route>
+                    <Route path="/admin-center/comment-verify">
+                        <CommentVerify/>
+                    </Route>
+                    <Route path="/admin-center/comment-browse">
+                        <CommentBrowse/>
                     </Route>
                 </div>
             </div>

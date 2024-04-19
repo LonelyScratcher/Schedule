@@ -50,16 +50,19 @@ public class CommentController {
         return new Result(Code.REQUEST_OK,commentList);
     }
 
+    //for user
     @PostMapping("/rewrite")
     public Result rewrite(@RequestBody Comment comment){
         commentService.rewrite(comment);
         return new Result(Code.REQUEST_OK,true);
     }
 
+    //for user
     @DeleteMapping("/remove")
     public Result remove(@RequestParam("commentId") int commentId){
         commentService.remove(commentId);
         return new Result(Code.REQUEST_OK,true);
     }
+
 
 }
