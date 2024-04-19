@@ -26,7 +26,7 @@ export default function AdminCenter(){
         e.preventDefault()
         removeUser()
         const res = message.success('退出登录成功！')
-        history.push('/')
+        history.push('/home')
         return res
     }
     const handleClickMenu = (e) => {

@@ -8,8 +8,12 @@ export const publish = (blog) => {
     return request.post('/blog',blog)
 }
 
-export const userSelf = () => {
-    return request.get('/blog')
+export const browseList = () => {
+    return request.get('/blog/browseList')
+}
+
+export const publishList = () => {
+    return request.get('/blog/publishList')
 }
 
 export const waitVerify = () => {

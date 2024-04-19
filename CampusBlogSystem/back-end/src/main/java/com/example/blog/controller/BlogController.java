@@ -46,11 +46,17 @@ public class BlogController {
         return new Result(Code.REQUEST_OK,true);
     }
 
-    @GetMapping
-    public Result alreadyPublish(HttpServletRequest request){
+    @GetMapping("/publishList")
+    public Result publishList(HttpServletRequest request){
         String userId = request.getHeader("userId");
-        List<Blog> blogList = blogService.alreadyPublish(Integer.parseInt(userId));
-        return new Result(Code.REQUEST_OK,blogList);
+        List<BlogVo> blogVoList = blogService.publishList(Integer.parseInt(userId));
+        return new Result(Code.REQUEST_OK,blogVoList);
+    }
+
+    @GetMapping("/browseList")
+    public Result browseList(){
+        List<BlogVo> blogVoList = blogService.browseList();
+        return new Result(Code.REQUEST_OK,blogVoList);
     }
 
     //remove blog

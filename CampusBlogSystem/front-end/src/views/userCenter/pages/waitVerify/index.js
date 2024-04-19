@@ -7,7 +7,6 @@ import {useHistory} from "react-router-dom";
 import {remove, waitVerify} from "@/api/blog";
 import {message} from "antd";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
-import {list} from "@/api/comment";
 
 export default function WaitVerifyBlog(){
     const [blogList,setBlogList] = useState([])
@@ -17,11 +16,6 @@ export default function WaitVerifyBlog(){
             setBlogList(data)
         })
     },[])
-    const partContent = (content) =>{
-        const max = 110
-        if (content.length>max) return content.slice(0,max)+'......'
-        return content
-    }
     const VERIFY = CONSTANT.VERIFY
     const stateTag = (state) =>{
         switch (state){
@@ -65,7 +59,7 @@ export default function WaitVerifyBlog(){
                         <img src={CONSTANT.COVER_PREFIX+item.coverUrl}/>
                         <div className="detail">
                             <p className="title">{item.title}</p>
-                            <p className="body">{partContent(item.content)}</p>
+                            <p className="body">{item.content}</p>
                             <div className="footer">
                                 <div className="left">
                                     <span>发布博客 {dateStr(item.date)}</span>

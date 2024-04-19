@@ -39,8 +39,60 @@ public class BlogServiceImpl implements BlogService {
     AuditRepository auditRepository;
 
     @Override
-    public List<Blog> alreadyPublish(int userId) {
-        return blogRepository.findBlogsByUserIdAndState(userId,APPROVED_ADOPT);
+    public List<BlogVo> publishList(int userId) {
+        List<Blog> blogList = blogRepository.findBlogsByUserIdAndState(userId,APPROVED_ADOPT);
+        List<BlogVo> blogVoList = new ArrayList<>();
+        for (Blog blog:blogList){
+            Integer id = blog.getId();
+            Date date = blog.getDate();
+            String title = blog.getTitle();
+            String content = blog.getContent();
+            String tagName = blog.getTagName();
+            String coverUrl = blog.getCoverUrl();
+            int state = blog.getState();
+            int access = blog.getAccess();
+
+            User user = userRepository.findById(userId).orElse(null);
+            Student student = studentRepository.findById(userId).orElse(null);
+            if (user==null || student== null) throw new BusinessException(Code.BUSINESS_ERR,"查询博客数据错误！");
+            String username = user.getUsername();
+            String author = student.getName();
+            int goodNum = goodRepository.countByBlogId(id);
+            int commentNum = commentRepository.countByBlogIdAndState(id, APPROVED_ADOPT);
+
+            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, goodNum, commentNum, false);
+            blogVoList.add(blogVo);
+        }
+        return blogVoList;
+    }
+
+    @Override
+    public List<BlogVo> browseList() {
+        List<Blog> blogList = blogRepository.findBlogsByState(APPROVED_ADOPT);
+        List<BlogVo> blogVoList = new ArrayList<>();
+        for (Blog blog:blogList){
+            Integer id = blog.getId();
+            Integer userId = blog.getUserId();
+            Date date = blog.getDate();
+            String title = blog.getTitle();
+            String content = blog.getContent();
+            String tagName = blog.getTagName();
+            String coverUrl = blog.getCoverUrl();
+            int state = blog.getState();
+            int access = blog.getAccess();
+
+            User user = userRepository.findById(userId).orElse(null);
+            Student student = studentRepository.findById(userId).orElse(null);
+            if (user==null || student== null) throw new BusinessException(Code.BUSINESS_ERR,"查询博客数据错误！");
+            String username = user.getUsername();
+            String author = student.getName();
+            int goodNum = goodRepository.countByBlogId(id);
+            int commentNum = commentRepository.countByBlogIdAndState(id, APPROVED_ADOPT);
+
+            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, goodNum, commentNum, false);
+            blogVoList.add(blogVo);
+        }
+        return blogVoList;
     }
 
     @Override
@@ -61,6 +113,7 @@ public class BlogServiceImpl implements BlogService {
             String content = blog.getContent();
             String tagName = blog.getTagName();
             String coverUrl = blog.getCoverUrl();
+            int access = blog.getAccess();
             int state = blog.getState();
 
             User user = userRepository.findById(userId).orElse(null);
@@ -72,7 +125,7 @@ public class BlogServiceImpl implements BlogService {
             int goodNum = goodRepository.countByBlogId(id);
             boolean isGood = goodRepository.existsByBlogIdAndUserId(id,curUserId);
             int commentNum = commentRepository.countByBlogIdAndState(id, APPROVED_ADOPT);
-            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, username, author, goodNum, commentNum,isGood);
+            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, goodNum, commentNum, isGood);
             blogVoList.add(blogVo);
         }
         return blogVoList;
@@ -90,6 +143,7 @@ public class BlogServiceImpl implements BlogService {
         String tagName = blog.getTagName();
         String coverUrl = blog.getCoverUrl();
         int state = blog.getState();
+        int access = blog.getAccess();
 
         User user = userRepository.findById(userId).orElse(null);
         Student student = studentRepository.findById(userId).orElse(null);
@@ -100,7 +154,7 @@ public class BlogServiceImpl implements BlogService {
         int goodNum = goodRepository.countByBlogId(blogId);
         boolean isGood = goodRepository.existsByBlogIdAndUserId(id,curUserId);
         int commentNum = commentRepository.countByBlogIdAndState(id, APPROVED_ADOPT);
-        return new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, username, author, goodNum, commentNum,isGood);
+        return new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, goodNum, commentNum, isGood);
 
     }
 
@@ -114,6 +168,7 @@ public class BlogServiceImpl implements BlogService {
         }
         blogRepository.deleteById(blogId);
     }
+
 
     @Override
     public List<Blog> searchText(String searchText) {

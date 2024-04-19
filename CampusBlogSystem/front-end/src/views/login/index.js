@@ -25,7 +25,7 @@ export default function Login(){
             if(!data) return
             saveUser(data)
             message.success('登录成功！')
-            history.push('/')
+            history.push('/home')
         })
     }
     return (

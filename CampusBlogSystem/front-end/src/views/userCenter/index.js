@@ -15,7 +15,7 @@ import CommentWait from "@/views/userCenter/pages/commentWait";
 export default function UserCenter(){
     const history = useHistory()
     const user = getUser()
-    const homePath = "/user-center/comment-wait"
+    const homePath = "/user-center/published"
 
     const goHome = (e) =>{
         e.preventDefault()

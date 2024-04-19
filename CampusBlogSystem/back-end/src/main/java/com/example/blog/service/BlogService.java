@@ -6,7 +6,7 @@ import com.example.blog.domain.vo.BlogVo;
 import java.util.List;
 
 public interface BlogService {
-    List<Blog> alreadyPublish(int userId);
+    List<BlogVo> publishList(int userId);
 
     List<Blog> waitVerify(int userId);
 
@@ -21,4 +21,6 @@ public interface BlogService {
     BlogVo item(int blogId,int curUserId);
 
     void remove(int blogId);
+
+    List<BlogVo> browseList();
 }

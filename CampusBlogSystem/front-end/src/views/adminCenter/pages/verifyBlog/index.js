@@ -1,5 +1,4 @@
 import './index.less'
-import front from '@/assets/images/front.png'
 import {useEffect, useState} from "react";
 import {verifyList} from "@/api/adminBlog";
 import CONSTANT from "@/util/constant";
@@ -45,7 +44,7 @@ export default function VerifyBlog(){
                         <img src={CONSTANT.COVER_PREFIX+item.coverUrl}/>
                         <div className="detail">
                             <p className="title">{item.title}</p>
-                            <p className="body">{partContent(item.content)}</p>
+                            <p className="body">{item.content}</p>
                             <div className="footer">
                                 <div className="left">
                                     <span>发布博客 {dateStr(item.date)}</span>

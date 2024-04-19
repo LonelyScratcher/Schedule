@@ -8,6 +8,8 @@ import {verifyCheck} from "@/api/adminBlog";
 
 const { TextArea } = Input;
 
+const VERIFY = CONSTANT.VERIFY
+
 export default function VerifyCheck(){
     const [already,setAlready] = useState(false)
     const [audit,setAudit] = useState({result:true,reason:""})
@@ -18,7 +20,11 @@ export default function VerifyCheck(){
     },[])
 
     useEffect(()=>{
-        verifyCheck({blogId:state.id}).then(data=>{
+        if (blogObj.state === VERIFY.APPROVED_ADOPT) {
+            setAlready(true)
+            return
+        }
+        verifyCheck({blogId:blogObj.id}).then(data=>{
             if(!data) return
             setAudit(data)
             setAlready(true)
@@ -58,7 +64,7 @@ export default function VerifyCheck(){
                     <div className="row-switch">
                         <span className="prefix">审核结果：</span>
                         <Switch disabled className="switch" checkedChildren="同意" unCheckedChildren="拒绝"
-                                defaultChecked={false}/>
+                                defaultChecked={audit.result}/>
                     </div>
                 )
             }

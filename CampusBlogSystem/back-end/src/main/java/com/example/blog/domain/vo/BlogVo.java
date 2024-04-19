@@ -20,6 +20,7 @@ public class BlogVo {
     private String tagName;
     private String coverUrl;
     private int state;
+    private int access;
 
     private String username;
     private String author;

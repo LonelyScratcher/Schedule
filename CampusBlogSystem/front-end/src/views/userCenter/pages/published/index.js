@@ -6,21 +6,19 @@ import CONSTANT from "@/util/constant";
 import {dateStr} from "@/util";
 import {message, Tag} from "antd";
 import {useHistory} from "react-router-dom";
-import {remove, userSelf, waitVerify} from "@/api/blog";
+import {item, remove, publishList, waitVerify} from "@/api/blog";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
-export default function WaitVerifyBlog(){
+import View from "@/components/icons/view";
+import FixedGood from "@/components/icons/good/fixed";
+import Comment from "@/components/icons/comment";
+export default function Published(){
     const [blogList,setBlogList] = useState([])
     const history = useHistory()
     useEffect(()=>{
-        userSelf().then(data=>{
+        publishList().then(data=>{
             setBlogList(data)
         })
     },[])
-    const partContent = (content) =>{
-        const max = 110
-        if (content.length>max) return content.slice(0,max)+'......'
-        return content
-    }
     //这里的删除其实应该把相关联更多信息删除
     const handleRemove = (blog) => {
         confirm({
@@ -33,7 +31,7 @@ export default function WaitVerifyBlog(){
                 remove({blogId:blog.id}).then(data=>{
                     if(!data) return
                     message.success('删除博客成功！')
-                    userSelf().then(data=>{
+                    publishList().then(data=>{
                         setBlogList(data)
                     })
                 })
@@ -41,8 +39,12 @@ export default function WaitVerifyBlog(){
             onCancel() {},
         });
     }
-    const handleCheck = (data) => {
-        history.push("/user-center/rewrite",data)
+    const handleCheck = (blog) => {
+        item({blogId:blog.id}).then((data)=>{
+            if (!data) return
+            const obj = {blog:data}
+            history.push("/access",obj)
+        })
     }
     const handleEdit = (data) => {
         history.push("/user-center/rewrite",data)
@@ -55,10 +57,13 @@ export default function WaitVerifyBlog(){
                         <img src={CONSTANT.COVER_PREFIX+item.coverUrl}/>
                         <div className="detail">
                             <p className="title">{item.title}</p>
-                            <p className="body">{partContent(item.content)}</p>
+                            <p className="body">{item.content}</p>
                             <div className="footer">
                                 <div className="left">
-                                    <span>发布博客 {dateStr(item.date)}</span>
+                                    <span className="text">发布博客 {dateStr(item.date)}</span>
+                                    <span><View size={15} viewNum={item.access}/></span>
+                                    <span><FixedGood size={15} goodNum={item.goodNum}/></span>
+                                    <span><Comment size={15} commentNum={item.commentNum}/></span>
                                 </div>
                                 <div className="right">
                                     <a onClick={(e)=>{

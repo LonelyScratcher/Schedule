@@ -34,7 +34,7 @@ export default function HomeLayout(props){
         e.preventDefault()
         removeUser()
         const res = message.success('退出登录成功！')
-        return history.push("/")
+        return history.push("/home")
     }
 
     const menu = (
