@@ -25,7 +25,7 @@ public class BlogVo {
     private String author;
 
     private int goodNum;
-    private List<Comment> commentList;
+    private int commentNum;
 
     boolean isGood;
 }

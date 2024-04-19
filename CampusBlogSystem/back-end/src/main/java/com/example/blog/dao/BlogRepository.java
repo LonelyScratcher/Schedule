@@ -8,12 +8,13 @@ import java.util.List;
 
 public interface BlogRepository extends JpaRepository<Blog, Integer> {
     List<Blog> findBlogsByUserIdAndState(int userId,int state);
-
+    List<Blog> findBlogsByUserIdAndStateNot(int userId,int state);
     List<Blog> findBlogsByUserId(int userId);
 
     List<Blog> findBlogsByState(int state);
 
     List<Blog> findBlogsByStateAndTitleContaining(int state,String searchText);
+
 
 
 }

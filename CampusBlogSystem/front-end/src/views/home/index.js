@@ -66,7 +66,6 @@ function Home(){
     useEffect(()=>{
         list().then(data=>{
             if (!data) return
-            console.log(data)
             setBlogList(data)
         })
     },blogList)

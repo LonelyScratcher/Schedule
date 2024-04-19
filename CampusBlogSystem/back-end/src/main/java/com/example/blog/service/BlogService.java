@@ -17,4 +17,8 @@ public interface BlogService {
     boolean switchGood(int userId,int blogId);
 
     void increaseAccess(int blogId);
+
+    BlogVo item(int blogId,int curUserId);
+
+    void remove(int blogId);
 }

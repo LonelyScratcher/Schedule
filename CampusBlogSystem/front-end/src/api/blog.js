@@ -16,8 +16,20 @@ export const waitVerify = () => {
     return request.get('/blog/waitVerify')
 }
 
+export const remove = (params) => {
+    return request.get('/blog/remove',{
+        params
+    })
+}
+
 export const list = () => {
     return request.get('/blog/list')
+}
+
+export const item = (params) => {
+    return request.get('/blog/item',{
+        params
+    })
 }
 
 export const searchList = (params) => {

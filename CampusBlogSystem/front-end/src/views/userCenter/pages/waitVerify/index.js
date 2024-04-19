@@ -4,7 +4,11 @@ import CONSTANT from "@/util/constant";
 import {dateStr} from "@/util";
 import {Tag} from "antd";
 import {useHistory} from "react-router-dom";
-import {waitVerify} from "@/api/blog";
+import {remove, waitVerify} from "@/api/blog";
+import {message} from "antd";
+import {ExclamationCircleOutlined} from "@ant-design/icons";
+import {list} from "@/api/comment";
+
 export default function WaitVerifyBlog(){
     const [blogList,setBlogList] = useState([])
     const history = useHistory()
@@ -30,8 +34,25 @@ export default function WaitVerifyBlog(){
         }
         return null
     }
-    const handleRemove = (data) => {
 
+    const handleRemove = (blog) => {
+        confirm({
+            title: '删除博客提交',
+            icon: <ExclamationCircleOutlined />,
+            content: '是否确认删除博客提交?',
+            okText:"确认",
+            cancelText:"取消",
+            onOk() {
+                remove({blogId:blog.id}).then(data=>{
+                    if(!data) return
+                    message.success('删除博客提交成功！')
+                    waitVerify().then(data=>{
+                        setBlogList(data)
+                    })
+                })
+            },
+            onCancel() {},
+        });
     }
     const handleEdit = (data) => {
         history.push("/user-center/rewrite",data)

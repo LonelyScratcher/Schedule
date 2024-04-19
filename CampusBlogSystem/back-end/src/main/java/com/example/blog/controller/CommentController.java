@@ -71,6 +71,12 @@ public class CommentController {
         return new Result(Code.REQUEST_OK,true);
     }
 
+    @PostMapping("/update")
+    public Result update(@RequestBody Comment comment){
+        commentService.update(comment);
+        return new Result(Code.REQUEST_OK,true);
+    }
+
     //for user
     @DeleteMapping("/remove")
     public Result remove(@RequestParam("commentId") int commentId){
@@ -88,6 +94,12 @@ public class CommentController {
     public Result verify(@RequestParam("commentId") int commentId){
         CommentAudit commentAudit = commentService.check(commentId);
         return new Result(Code.REQUEST_OK,commentAudit);
+    }
+
+    @GetMapping("/blogOwn")
+    public Result blogOwn(@RequestParam("blogId") int blogId){
+        List<CommentVo> commentVoList = commentService.blogOwn(blogId);
+        return new Result(Code.REQUEST_OK,commentVoList);
     }
 
 }

@@ -28,5 +28,10 @@ public interface CommentService {
     void verify(CommentVerifyDto commentVerifyDto);
 
     CommentAudit check(int commentId);
+
+    void update(Comment comment);
+
+    List<CommentVo> blogOwn(int blogId);
+
 }
 

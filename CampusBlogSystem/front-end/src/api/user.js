@@ -4,6 +4,8 @@ export const login = (params) =>{
     return request.get('/user/login',{params})
 }
 
-export const getAuthorInfo = () => {
-    return request.get('/user/authorInfo')
+export const getAuthorInfo = (params) => {
+    return request.get('/user/authorInfo',{
+        params
+    })
 }

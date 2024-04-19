@@ -1,13 +1,9 @@
 package com.example.blog.service.impl;
 import java.util.Date;
 
-import com.example.blog.dao.BlogRepository;
-import com.example.blog.dao.CommentAuditRepository;
-import com.example.blog.dao.CommentRepository;
+import com.example.blog.dao.*;
 import com.example.blog.domain.dto.CommentVerifyDto;
-import com.example.blog.domain.pojo.Blog;
-import com.example.blog.domain.pojo.Comment;
-import com.example.blog.domain.pojo.CommentAudit;
+import com.example.blog.domain.pojo.*;
 import com.example.blog.domain.vo.CommentVo;
 import com.example.blog.exception.BusinessException;
 import com.example.blog.service.CommentService;
@@ -18,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -30,6 +27,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     CommentAuditRepository commentAuditRepository;
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    UserRepository userRepository;
     @Override
     public void insertComment(Comment comment) {
         commentRepository.save(comment);
@@ -68,7 +69,12 @@ public class CommentServiceImpl implements CommentService {
         Blog blog = blogRepository.findById(blogId).orElse(null);
         if (blog == null) throw new BusinessException(Code.BUSINESS_ERR,"查询评论数据失败！");
         String blogTitle = blog.getTitle();
-        return new CommentVo(id, blogId, userId, state, content, blogTitle, date);
+        Student student = studentRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
+        String author = student != null ? student.getName() : "";
+        String username = user != null ? user.getUsername() : "";
+
+        return new CommentVo(id, blogId, userId, state, content, blogTitle, date,author,username);
     }
 
     @Override
@@ -85,14 +91,21 @@ public class CommentServiceImpl implements CommentService {
         int state = target.getState();
         if (state==Constant.APPROVED_REFUSE) {
             commentAuditRepository.removeByCommentId(commentId);
-            target.setState(Constant.PEND_REVIEW);
         }
+        target.setState(Constant.PEND_REVIEW);
         target.setContent(comment.getContent());
         commentRepository.save(target);
     }
 
     @Override
     public void remove(int commentId) {
+        //这里删除还应该判断commentId对于comment是拒绝再删除原因
+        Comment comment =  commentRepository.findById(commentId).orElse(null);
+        if (comment==null) throw new BusinessException(Code.BUSINESS_ERR,"删除评论失败");
+        if (comment.getState()==Constant.APPROVED_REFUSE){
+            CommentAudit commentAudit = commentAuditRepository.findByCommentId(commentId);
+            commentAuditRepository.deleteById(commentAudit.getId());
+        }
         commentRepository.deleteById(commentId);
     }
 
@@ -141,6 +154,25 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentAudit check(int commentId) {
         return commentAuditRepository.findByCommentId(commentId);
+    }
+
+    @Override
+    public void update(Comment comment) {
+        Comment target = commentRepository.findById(comment.getId()).orElse(null);
+        if (target==null) throw new BusinessException(Code.BUSINESS_ERR,"更新评论失败！");
+        target.setContent(comment.getContent());
+        commentRepository.save(target);
+    }
+
+    @Override
+    public List<CommentVo> blogOwn(int blogId) {
+        List<Comment> commentList = commentRepository.findByBlogIdAndState(blogId,Constant.APPROVED_ADOPT);
+        List<CommentVo> commentVoList = new ArrayList<>();
+        for (Comment comment:commentList){
+            CommentVo commentVo = plusInfo(comment);
+            commentVoList.add(commentVo);
+        }
+        return commentVoList;
     }
 
 }

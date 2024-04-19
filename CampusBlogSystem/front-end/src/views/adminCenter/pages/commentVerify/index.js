@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import {check, list, remove, rewrite, verify, verifyList} from "@/api/comment";
 import TextArea from "antd/es/input/TextArea";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
+import {item} from "@/api/blog";
 const VERIFY = CONSTANT.VERIFY
 const stateTag = (state) =>{
     switch (state){
@@ -21,7 +22,7 @@ const stateTag = (state) =>{
 }
 export default function CommentVerify(){
     const [commentList,setCommentList] = useState([])
-
+    const history = useHistory()
     useEffect(()=>{
         verifyList().then(data=>{
             setCommentList(data)
@@ -101,6 +102,14 @@ export default function CommentVerify(){
     }
     const columns = [
         {
+            title: '评论作者',
+            dataIndex: 'author'
+        },
+        {
+            title: '评论用户',
+            dataIndex: 'username'
+        },
+        {
             title: '评论内容',
             dataIndex: 'content'
         },
@@ -116,9 +125,11 @@ export default function CommentVerify(){
                 const {blogId,blogTitle} = comment
                 const handleClick = (e) =>{
                     e.preventDefault()
-                    const history = useHistory()
-                    const data = {blogId}
-                    history.push("/access",data)
+                    item({blogId}).then((data)=>{
+                        if (!data) return
+                        const obj = {blog:data}
+                        history.push("/access",obj)
+                    })
                 }
                 return <a onClick={handleClick}>{blogTitle}</a>
             },

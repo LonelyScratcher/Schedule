@@ -12,7 +12,7 @@ import {RightOutlined} from "@ant-design/icons";
 import {Button, Drawer, message} from "antd";
 import {getAuthorInfo} from "@/api/user";
 import {access} from "@/api/blog";
-import {insert} from "@/api/comment";
+import {blogOwn, insert} from "@/api/comment";
 const generalAttr = [
     {name:'博客数', value:0},
     {name:'总访问', value:0}
@@ -26,21 +26,29 @@ export default function Access(){
     const {state} = useLocation()
     const [open, setOpen] = useState(false);
     const blog = state?.blog || {title:'',content:'',tagName:'',
-        date:'',author:'',goodNum:0,good:false,commentList:[]}
+        date:'',author:'',goodNum:0,commentNum:0,good:false}
     const [authorInfo,setAuthorInfo] = useState(initAuthorInfo)
     const {generalAttr,detailAttr} = authorInfo;
-    const commentList = blog.commentList
     const [commentInput,setCommentInput] = useState("");
-
+    const [commentList,setCommentList] = useState([])
     useEffect(()=>{
+        console.log(blog)
         document.getElementById('md-body').innerHTML = marked.parse(blog.content);
     },[])
+
     useEffect(()=>{
-        getAuthorInfo().then(data=>{
+        getAuthorInfo({userId:blog.userId}).then(data=>{
             if (!data) return
             setAuthorInfo(data)
         })
-    },[authorInfo])
+    },[])
+
+    useEffect(()=>{
+        blogOwn({blogId:blog.id}).then(data=>{
+            if (!data) return
+            setCommentList(data)
+        })
+    },[])
 
     useEffect(()=>{
         access({blogId: blog.id}).then(()=>{})
@@ -63,7 +71,6 @@ export default function Access(){
 
     const submitComment = () =>{
         const user = getUser()
-        console.log(user)
         if (commentInput==='') {
             message.error('评论内容不能为空！')
             return
@@ -131,7 +138,7 @@ export default function Access(){
                                 <div className="bottom-describe">
                                     <Good goodNum={blog.goodNum} isGood={blog.good} blogId={blog.id}/>
                                     <Collection/>
-                                    <Comment/>
+                                    <Comment commentNum={blog.commentNum}/>
                                 </div>
                             </div>
                             <div className="comment-container">
@@ -141,8 +148,8 @@ export default function Access(){
                                     commentList.length>0&&
                                     <>
                                         <img src={avatar}/>
-                                        <span className="username">username</span>
-                                        <span className="content">评论内容</span>
+                                        <span className="username">{commentList[0].author}</span>
+                                        <span className="content">{commentList[0].content}</span>
                                     </>
                                 }
                                 <Button onClick={handleClickComment} className="btn">写评论</Button>

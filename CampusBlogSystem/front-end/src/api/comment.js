@@ -32,6 +32,10 @@ export const rewrite = (data) =>{
     return request.post('/comment/rewrite',data)
 }
 
+export const update = (data) =>{
+    return request.post('/comment/update',data)
+}
+
 export const remove = (params) =>{
     return request.delete('/comment/remove',{
         params
@@ -48,3 +52,8 @@ export const check = (params) =>{
     })
 }
 
+export const blogOwn = (params) =>{
+    return request.get('/comment/blogOwn', {
+        params
+    })
+}

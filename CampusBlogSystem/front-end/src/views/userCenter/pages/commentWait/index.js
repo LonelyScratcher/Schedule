@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import {list, remove, rewrite} from "@/api/comment";
 import TextArea from "antd/es/input/TextArea";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
+import {item} from "@/api/blog";
 const VERIFY = CONSTANT.VERIFY
 const stateTag = (state) =>{
     switch (state){
@@ -22,7 +23,7 @@ const stateTag = (state) =>{
 const { confirm } = Modal;
 export default function CommentWait(){
     const [commentList,setCommentList] = useState([])
-
+    const history = useHistory()
     useEffect(()=>{
         list().then(data=>{
             setCommentList(data)
@@ -122,9 +123,11 @@ export default function CommentWait(){
                 const {blogId,blogTitle} = comment
                 const handleClick = (e) =>{
                     e.preventDefault()
-                    const history = useHistory()
-                    const data = {blogId}
-                    history.push("/access",data)
+                    item({blogId}).then((data)=>{
+                        if (!data) return
+                        const obj = {blog:data}
+                        history.push("/access",obj)
+                    })
                 }
                 return <a onClick={handleClick}>{blogTitle}</a>
             },

@@ -31,10 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/authorInfo")
-    public Result authorInfo(HttpServletRequest request){
-        String userIdStr = request.getHeader("userId");
-        int userId = 0;
-        if (userIdStr != null) userId = Integer.parseInt(userIdStr);
+    public Result authorInfo(@RequestParam("userId") int userId){
         AuthorInfo authorInfo = userService.getAuthorInfo(userId);
         return new Result(Code.REQUEST_OK,authorInfo);
     }

@@ -16,4 +16,6 @@ public class CommentVo {
     String content;
     String blogTitle;
     Date date;
+    String author;
+    String username;
 }

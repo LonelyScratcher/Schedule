@@ -53,6 +53,13 @@ public class BlogController {
         return new Result(Code.REQUEST_OK,blogList);
     }
 
+    //remove blog
+    @GetMapping("/remove")
+    public Result remove(@RequestParam("blogId") int blogId){
+        blogService.remove(blogId);
+        return new Result(Code.REQUEST_OK,true);
+    }
+
     //fetch list of blog with author describe
     @GetMapping("/list")
     public Result list(HttpServletRequest request){
@@ -61,6 +68,16 @@ public class BlogController {
         if (userIdStr != null) userId = Integer.parseInt(userIdStr);
         List<BlogVo> blogVoList = blogService.list(userId);
         return new Result(Code.REQUEST_OK,blogVoList);
+    }
+
+    //fetch blog item with author describe
+    @GetMapping("/item")
+    public Result item(@RequestParam("blogId") int blogId,HttpServletRequest request){
+        String userIdStr = request.getHeader("userId");
+        int userId = 0;
+        if (userIdStr != null) userId = Integer.parseInt(userIdStr);
+        BlogVo blogVo = blogService.item(blogId,userId);
+        return new Result(Code.REQUEST_OK,blogVo);
     }
 
     @GetMapping("/access")

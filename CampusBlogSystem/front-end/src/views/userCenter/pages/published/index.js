@@ -4,9 +4,10 @@ import {useEffect, useState} from "react";
 import {verifyList} from "@/api/adminBlog";
 import CONSTANT from "@/util/constant";
 import {dateStr} from "@/util";
-import {Tag} from "antd";
+import {message, Tag} from "antd";
 import {useHistory} from "react-router-dom";
-import {userSelf} from "@/api/blog";
+import {remove, userSelf, waitVerify} from "@/api/blog";
+import {ExclamationCircleOutlined} from "@ant-design/icons";
 export default function WaitVerifyBlog(){
     const [blogList,setBlogList] = useState([])
     const history = useHistory()
@@ -20,8 +21,25 @@ export default function WaitVerifyBlog(){
         if (content.length>max) return content.slice(0,max)+'......'
         return content
     }
-    const handleRemove = (data) => {
-
+    //这里的删除其实应该把相关联更多信息删除
+    const handleRemove = (blog) => {
+        confirm({
+            title: '删除博客',
+            icon: <ExclamationCircleOutlined />,
+            content: '是否确认删除博客?',
+            okText:"确认",
+            cancelText:"取消",
+            onOk() {
+                remove({blogId:blog.id}).then(data=>{
+                    if(!data) return
+                    message.success('删除博客成功！')
+                    userSelf().then(data=>{
+                        setBlogList(data)
+                    })
+                })
+            },
+            onCancel() {},
+        });
     }
     const handleCheck = (data) => {
         history.push("/user-center/rewrite",data)
