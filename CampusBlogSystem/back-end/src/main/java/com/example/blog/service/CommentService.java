@@ -1,6 +1,8 @@
 package com.example.blog.service;
 
+import com.example.blog.domain.dto.CommentVerifyDto;
 import com.example.blog.domain.pojo.Comment;
+import com.example.blog.domain.pojo.CommentAudit;
 import com.example.blog.domain.vo.CommentVo;
 
 import java.util.List;
@@ -18,4 +20,13 @@ public interface CommentService {
     void rewrite(Comment comment);
 
     void remove(int commentId);
+
+    List<CommentVo> verifyList();
+
+    List<CommentVo> browseList();
+
+    void verify(CommentVerifyDto commentVerifyDto);
+
+    CommentAudit check(int commentId);
 }
+

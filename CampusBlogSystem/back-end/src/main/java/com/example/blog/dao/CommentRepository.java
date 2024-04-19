@@ -12,4 +12,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     public List<Comment> findByUserIdAndState(int userId,int state);
     public int countByBlogId(int blogId);
+
+    public List<Comment> findByState(int state);
 }

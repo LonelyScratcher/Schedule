@@ -1,7 +1,9 @@
 package com.example.blog.controller;
 
 
+import com.example.blog.domain.dto.CommentVerifyDto;
 import com.example.blog.domain.pojo.Comment;
+import com.example.blog.domain.pojo.CommentAudit;
 import com.example.blog.domain.pojo.User;
 import com.example.blog.domain.vo.CommentVo;
 import com.example.blog.exception.BusinessException;
@@ -43,6 +45,18 @@ public class CommentController {
         return new Result(Code.REQUEST_OK,commentVoList);
     }
 
+    @GetMapping("/verifyList")
+    public Result verifyList(){
+        List<CommentVo> commentVoList = commentService.verifyList();
+        return new Result(Code.REQUEST_OK,commentVoList);
+    }
+    //仅限于通过的评论
+    @GetMapping("/browseList")
+    public Result browseList(){
+        List<CommentVo> commentVoList = commentService.browseList();
+        return new Result(Code.REQUEST_OK,commentVoList);
+    }
+
     //某博客对应全部评论
     @GetMapping("/commentList")
     public Result commentList(@RequestParam("blogId") int blogId){
@@ -64,5 +78,16 @@ public class CommentController {
         return new Result(Code.REQUEST_OK,true);
     }
 
+    @PostMapping("/verify")
+    public Result verify(@RequestBody CommentVerifyDto commentVerifyDto){
+        commentService.verify(commentVerifyDto);
+        return new Result(Code.REQUEST_OK,true);
+    }
+
+    @GetMapping("/check")
+    public Result verify(@RequestParam("commentId") int commentId){
+        CommentAudit commentAudit = commentService.check(commentId);
+        return new Result(Code.REQUEST_OK,commentAudit);
+    }
 
 }

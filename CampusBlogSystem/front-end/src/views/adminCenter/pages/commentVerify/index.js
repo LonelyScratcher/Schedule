@@ -1,10 +1,10 @@
 import './index.less'
-import {Modal, Space, Table, Tag, message} from "antd";
+import {Modal, Space, Table, Tag, message, Switch} from "antd";
 import CONSTANT from "@/util/constant";
 import {useHistory} from "react-router-dom";
 import {dateStr} from "@/util";
 import {useEffect, useState} from "react";
-import {list, remove, rewrite} from "@/api/comment";
+import {check, list, remove, rewrite, verify, verifyList} from "@/api/comment";
 import TextArea from "antd/es/input/TextArea";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
 const VERIFY = CONSTANT.VERIFY
@@ -19,83 +19,77 @@ const stateTag = (state) =>{
     }
     return null
 }
-const { confirm } = Modal;
 export default function CommentVerify(){
     const [commentList,setCommentList] = useState([])
 
     useEffect(()=>{
-        list().then(data=>{
+        verifyList().then(data=>{
             setCommentList(data)
         })
     },[commentList])
 
-    //for rewrite
-    const [isRewriteOpen, setIsRewriteOpen] = useState(false);
-    const showRewrite = (comment) => {
+    //for Verify
+    const [isVerifyOpen, setIsVerifyOpen] = useState(false);
+    const showVerify = (comment) => {
         setCurComment(comment)
-        setCommentInput("")
-        setIsRewriteOpen(true);
+        setReasonInput("")
+        setIsVerify(true)
+        setIsVerifyOpen(true);
     };
 
-
-    const handleCancel = () => {
+    const verifyCancel = () => {
         setCurComment(null)
-        setCommentInput("")
-        setIsRewriteOpen(false);
+        setReasonInput("")
+        setIsVerifyOpen(false);
     };
 
-    //for delete
-    const [isRemoveOpen, setIsRemoveOpen] = useState(false);
+    //for check
+    const [isCheckOpen, setIsCheckOpen] = useState(false);
+    const [checkRes, setCheckRes] = useState({result:true,reason:''});
 
-
-    const showRemove = (comment) => {
-        confirm({
-            title: '删除评论提交',
-            icon: <ExclamationCircleOutlined />,
-            content: '是否确认删除评论提交?',
-            okText:"确认",
-            cancelText:"取消",
-            onOk() {
-                remove({commentId:comment.id}).then(data=>{
-                    if (!data) return
-                    message.success('删除评论提交成功！')
-                    list().then(data=>{
-                        setCommentList(data)
-                    })
-                })
-            },
-            onCancel() {},
-        });
+    const checkHidde = () => {
+        setIsCheckOpen(false);
     };
 
-    const hideRemove = () => {
-        setIsRemoveOpen(false);
-    };
+    const handleCheck = (comment) =>{
+        if (comment.state===VERIFY.APPROVED_ADOPT){
+            setCheckRes({result: true,reason: ''})
+            setIsCheckOpen(true)
+            return
+        }
+        check({commentId:comment.id}).then(data=>{
+            if (!data) return
+            setCheckRes(data)
+            setIsCheckOpen(true)
+        })
+    }
 
-    //评论模块
-    const [commentInput,setCommentInput] = useState("")
+
+    //审核模块
+    const [reasonInput,setReasonInput] = useState("")
 
     const [curComment,setCurComment] = useState(null)
+    const [isVerify,setIsVerify] = useState(true)
 
-    const handleRewrite = () =>{
+    const handleVerify = () =>{
         if (curComment==='') {
-            message.error('未选择评论不可提交！')
+            message.error('未选择评论不可审核！')
             return
         }
-        if (commentInput==='') {
-            message.error('评论内容不可为空！')
+        if (!isVerify&&reasonInput==='') {
+            message.error('审核原因不可为空！')
             return
         }
-        const newComment = {
-            id:curComment.id,
-            date:new Date(),
-            content:commentInput
+        const verifyRes = {
+            commentId:curComment.id,
+            result:isVerify,
+            reason:reasonInput
         }
-        rewrite(newComment).then(data=>{
+        verify(verifyRes).then(data=>{
             if (!data) return;
-            message.success('提交评论成功！')
-            setIsRewriteOpen(false);
-            list().then(data=>{
+            message.success('审核评论成功！')
+            setIsVerifyOpen(false);
+            verifyList().then(data=>{
                 setCommentList(data)
             })
         })
@@ -103,7 +97,7 @@ export default function CommentVerify(){
 
 
     const handleInput = (e) =>{
-        setCommentInput(e.target.value)
+        setReasonInput(e.target.value)
     }
     const columns = [
         {
@@ -143,12 +137,12 @@ export default function CommentVerify(){
                             comment.state===VERIFY.PEND_REVIEW?
                                 <a onClick={(e)=>{
                                     e.preventDefault()
-                                    showRewrite(comment)
+                                    showVerify(comment)
                                 }}>审核</a>
                                 :
                                 <a onClick={(e)=>{
                                     e.preventDefault()
-                                    showRewrite(comment)
+                                    handleCheck(comment)
                                 }}>查看</a>
                         }
                     </Space>
@@ -157,21 +151,53 @@ export default function CommentVerify(){
         },
     ];
 
+     const handleChange = (value) =>{
+         setIsVerify(value)
+    }
+
     return (
         <>
             <div className="comment-wait-container">
                 <Table columns={columns} dataSource={commentList} />
             </div>
             <Modal
-                title="重新提交"
-                open={isRewriteOpen}
-                onOk={handleRewrite}
-                onCancel={handleCancel}
+                title="审核评论"
+                open={isVerifyOpen}
+                onOk={handleVerify}
+                onCancel={verifyCancel}
                 okText="确认"
                 cancelText="取消">
                 <div>
-                    <span>评论内容</span>
-                    <TextArea value={commentInput} onChange={handleInput}/>
+                    <span>审核结果</span>
+                    <Switch onClick={handleChange} checked={isVerify} checkedChildren="同意" unCheckedChildren="拒绝"/>
+                    {
+                        !isVerify&&
+                        <>
+                            <br/>
+                            <span>拒绝原因</span>
+                            <TextArea value={reasonInput} onChange={handleInput}/>
+                        </>
+                    }
+                </div>
+            </Modal>
+            <Modal
+                title="查看审核"
+                open={isCheckOpen}
+                onOk={checkHidde}
+                onCancel={checkHidde}
+                okText="确认"
+                cancelText="取消">
+                <div>
+                    <span>审核结果</span>
+                    <Switch disabled checked={checkRes.result} checkedChildren="同意" unCheckedChildren="拒绝"/>
+                    {
+                        !checkRes.result&&
+                        <>
+                            <br/>
+                            <span>拒绝原因</span>
+                            <TextArea value={checkRes.reason} disabled/>
+                        </>
+                    }
                 </div>
             </Modal>
         </>

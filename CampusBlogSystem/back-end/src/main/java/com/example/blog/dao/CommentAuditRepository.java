@@ -9,4 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface CommentAuditRepository extends JpaRepository<CommentAudit, Integer> {
     @Transactional
     public void removeByCommentId(int commentId);
+
+    CommentAudit findByCommentId(int commentId);
 }

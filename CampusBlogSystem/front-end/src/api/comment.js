@@ -13,6 +13,15 @@ export const accessList = () =>{
     return request.get('/comment/accessList')
 }
 
+export const verifyList = () =>{
+    return request.get('/comment/verifyList')
+}
+
+export const browseList = () =>{
+    return request.get('/comment/browseList')
+
+}
+
 export const commentList = (params) =>{
     return request.get('/comment/commentList',{
         params
@@ -28,3 +37,14 @@ export const remove = (params) =>{
         params
     })
 }
+
+export const verify = (data) =>{
+    return request.post('/comment/verify',data)
+}
+
+export const check = (params) =>{
+    return request.get('/comment/check', {
+        params
+    })
+}
+

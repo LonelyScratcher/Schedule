@@ -4,8 +4,10 @@ import java.util.Date;
 import com.example.blog.dao.BlogRepository;
 import com.example.blog.dao.CommentAuditRepository;
 import com.example.blog.dao.CommentRepository;
+import com.example.blog.domain.dto.CommentVerifyDto;
 import com.example.blog.domain.pojo.Blog;
 import com.example.blog.domain.pojo.Comment;
+import com.example.blog.domain.pojo.CommentAudit;
 import com.example.blog.domain.vo.CommentVo;
 import com.example.blog.exception.BusinessException;
 import com.example.blog.service.CommentService;
@@ -92,6 +94,53 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void remove(int commentId) {
         commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public List<CommentVo> verifyList() {
+        List<Comment> commentList = commentRepository.findAll();
+        List<CommentVo> commentVoList = new ArrayList<>();
+        for (Comment comment:commentList){
+            CommentVo commentVo = plusInfo(comment);
+            commentVoList.add(commentVo);
+        }
+        return commentVoList;
+    }
+
+    @Override
+    public List<CommentVo> browseList() {
+        List<Comment> commentList = commentRepository.findByState(Constant.APPROVED_ADOPT);
+        List<CommentVo> commentVoList = new ArrayList<>();
+        for (Comment comment:commentList){
+            CommentVo commentVo = plusInfo(comment);
+            commentVoList.add(commentVo);
+        }
+        return commentVoList;
+    }
+
+    @Override
+    public void verify(CommentVerifyDto commentVerifyDto) {
+        int commentId = commentVerifyDto.getCommentId();
+        boolean isResult = commentVerifyDto.isResult();
+        String reason = commentVerifyDto.getReason();
+        CommentAudit commentAudit = new CommentAudit();
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        if (comment==null) throw new BusinessException(Code.BUSINESS_ERR,"审核评论失败！");
+        if (isResult){
+            comment.setState(Constant.APPROVED_ADOPT);
+        }else {
+            comment.setState(Constant.APPROVED_REFUSE);
+            commentAudit.setCommentId(commentId);
+            commentAudit.setReason(reason);
+            commentAuditRepository.save(commentAudit);
+        }
+        commentRepository.save(comment);
+
+    }
+
+    @Override
+    public CommentAudit check(int commentId) {
+        return commentAuditRepository.findByCommentId(commentId);
     }
 
 }
