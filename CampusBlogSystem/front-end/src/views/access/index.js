@@ -11,8 +11,9 @@ import Comment from "@/components/icons/comment";
 import {RightOutlined} from "@ant-design/icons";
 import {Button, Drawer, message} from "antd";
 import {getAuthorInfo} from "@/api/user";
-import {access} from "@/api/blog";
+import {access, summaryContent} from "@/api/blog";
 import {blogOwn, insert} from "@/api/comment";
+
 const generalAttr = [
     {name:'博客数', value:0},
     {name:'总访问', value:0}
@@ -31,8 +32,9 @@ export default function Access(){
     const {generalAttr,detailAttr} = authorInfo;
     const [commentInput,setCommentInput] = useState("");
     const [commentList,setCommentList] = useState([])
+    const [summary,setSummary] = useState("")
+    const isSummary = false;
     useEffect(()=>{
-        console.log(blog)
         document.getElementById('md-body').innerHTML = marked.parse(blog.content);
     },[])
 
@@ -52,6 +54,15 @@ export default function Access(){
 
     useEffect(()=>{
         access({blogId: blog.id}).then(()=>{})
+    },[])
+
+    useEffect(()=>{
+        if (!isSummary) return
+        const content = blog.content.replace(/\s|#/g, '');
+        console.log(content)
+        summaryContent({content}).then(data=>{
+            setSummary(data.content)
+        })
     },[])
 
     const handleClickComment = () =>{
@@ -121,7 +132,7 @@ export default function Access(){
                             </div>
                             <div className="summary-container">
                                 <span className="title">博客摘要</span>
-                                <span className="content">这是博客摘要内容...</span>
+                                <span className="content">{summary}</span>
                             </div>
                         </div>
                         <div className="access-right-container">

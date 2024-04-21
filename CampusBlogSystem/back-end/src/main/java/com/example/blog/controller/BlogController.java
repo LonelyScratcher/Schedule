@@ -119,7 +119,7 @@ public class BlogController {
 
 
     @GetMapping("/cover/{imageName}")
-    public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws IOException {
+    public ResponseEntity<Resource> getCover(@PathVariable String imageName) throws IOException {
         Path imagePath = Paths.get("upload/cover/"+imageName);
         Resource image = new FileSystemResource(imagePath);
         return ResponseEntity.ok()
@@ -127,8 +127,18 @@ public class BlogController {
                 .body(image);
     }
 
+    @GetMapping("/avatar/{imageName}")
+    public ResponseEntity<Resource> getAvatar(@PathVariable String imageName) throws IOException {
+        Path imagePath = Paths.get("upload/avatar/"+imageName);
+        Resource image = new FileSystemResource(imagePath);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG) // 设置响应类型为图片类型
+                .body(image);
+    }
+
+
     @PostMapping("/uploadCover")
-    public Result handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public Result handleCoverUpload(@RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
             try {
                 // 获取文件的字节数组
@@ -155,4 +165,34 @@ public class BlogController {
             throw new BusinessException(Code.BUSINESS_ERR,"文件为空！");
         }
     }
+
+    @PostMapping("/uploadAvatar")
+    public Result uploadAvatarUpload(@RequestParam("file") MultipartFile file) {
+        if (!file.isEmpty()) {
+            try {
+                // 获取文件的字节数组
+                byte[] bytes = file.getBytes();
+                // 指定文件保存的路径（可以根据需求修改）
+
+                File classpath = ResourceUtils.getFile("");
+                // 获取类路径的绝对路径
+                String filePath = classpath.getAbsolutePath()+"\\upload\\avatar\\";
+                String timestamp = String.valueOf(new Date().getTime());
+                String fileName = timestamp+"_"+file.getOriginalFilename();
+                // 创建文件对象
+                File uploadedFile = new File(filePath + fileName);
+                // 将文件写入磁盘
+                FileOutputStream fos = new FileOutputStream(uploadedFile);
+                fos.write(bytes);
+                fos.close();
+                return new Result(Code.REQUEST_OK,fileName);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                throw new BusinessException(Code.BUSINESS_ERR,"文件上传失败！");
+            }
+        } else {
+            throw new BusinessException(Code.BUSINESS_ERR,"文件为空！");
+        }
+    }
+
 }

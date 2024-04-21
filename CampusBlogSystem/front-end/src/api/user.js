@@ -9,3 +9,21 @@ export const getAuthorInfo = (params) => {
         params
     })
 }
+
+export const getUserInfo = () => {
+    return request.get('/user/userInfo')
+}
+
+export const getAdminInfo = () => {
+    return request.get('/user/adminInfo')
+}
+
+
+export const updateUserInfo = (data) =>{
+    return request.put('/user/userInfo',data)
+}
+
+
+export const updateAdminInfo = (data) =>{
+    return request.put('/user/adminInfo',data)
+}

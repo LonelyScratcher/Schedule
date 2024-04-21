@@ -1,5 +1,4 @@
 import {Button, Dropdown, Input, Menu, message, Space} from "antd";
-import avatar from "@/assets/images/avatar.jpg";
 import {AppstoreOutlined, DownOutlined, MailOutlined, SettingOutlined} from "@ant-design/icons";
 import './index.less'
 import {getUser, removeUser} from "@/util";
@@ -11,6 +10,7 @@ import VerifyDetail from "@/views/adminCenter/pages/verifyDetail";
 import VerifyCheck from "@/views/adminCenter/pages/verifyCheck";
 import CommentVerify from "@/views/adminCenter/pages/commentVerify";
 import CommentBrowse from "@/views/adminCenter/pages/commentBrowse";
+import CONSTANT from "@/util/constant";
 
 
 export default function AdminCenter(){
@@ -80,7 +80,7 @@ export default function AdminCenter(){
             <div className="app-header backstage-top">
                 <h2 className="title white">校园博客系统</h2>
                 <div className="avatar-space">
-                    <img src={avatar} className="avatar"/>
+                    <img src={CONSTANT.AVATAR_PREFIX+user.avatar} className="avatar"/>
                     <Dropdown
                         overlay={avatarMenu}>
                         <a onClick={(e) => e.preventDefault()}>
@@ -124,9 +124,6 @@ export default function AdminCenter(){
                     </Route>
                     <Route path="/admin-center/verify-check">
                         <VerifyCheck/>
-                    </Route>
-                    <Route path="/admin-center/verify-detail">
-                        <VerifyDetail/>
                     </Route>
                     <Route path="/admin-center/comment-verify">
                         <CommentVerify/>

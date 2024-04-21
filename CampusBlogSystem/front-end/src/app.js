@@ -8,7 +8,7 @@ import Access from "@/views/access";
 export default function App(){
     const testObj = {
         isTest:true,
-        testPath:'/access'
+        testPath:'/home'
     }
     return (
         <Router>

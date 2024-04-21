@@ -5,6 +5,7 @@ import avatar from '@/assets/images/avatar.jpg'
 import {DownOutlined} from "@ant-design/icons";
 import {getUser, removeUser} from "@/util";
 import {useState} from "react";
+import CONSTANT from "@/util/constant";
 
 export default function HomeLayout(props){
     const {state} = useLocation()
@@ -81,7 +82,7 @@ export default function HomeLayout(props){
                 {
                     isLogin&&(
                         <div className="avatar-space">
-                            <img src={avatar} className="avatar"/>
+                            <img src={CONSTANT.AVATAR_PREFIX+user.avatar} className="avatar"/>
                             <Dropdown overlay={menu}>
                                 <a onClick={(e) => e.preventDefault()}>
                                     <Space>

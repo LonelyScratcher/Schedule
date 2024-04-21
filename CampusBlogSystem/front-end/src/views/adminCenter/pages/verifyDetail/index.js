@@ -36,9 +36,7 @@ export default function VerifyDetail(){
         verify(form).then(data=>{
             if (!data) return
             message.success('审核博客成功！')
-                .then(()=>{
-                    history.push('/admin-center/verify-blog')
-                })
+            history.push('/admin-center/verify-blog')
         })
     }
 

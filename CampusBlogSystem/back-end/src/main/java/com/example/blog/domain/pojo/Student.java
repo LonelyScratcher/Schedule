@@ -14,4 +14,6 @@ public class Student {
     private Integer id;
 
     private String name;
+    private String avatarUrl;
+    private String description;
 }

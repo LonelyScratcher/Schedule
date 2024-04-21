@@ -1,5 +1,4 @@
 import {Button, Dropdown, Input, Menu, message, Space} from "antd";
-import avatar from "@/assets/images/avatar.jpg";
 import {AppstoreOutlined, DownOutlined, MailOutlined, SettingOutlined} from "@ant-design/icons";
 import './index.less'
 import {getUser, removeUser} from "@/util";
@@ -10,6 +9,7 @@ import WaitVerify from "@/views/userCenter/pages/waitVerify";
 import Write from "@/views/userCenter/pages/write";
 import CommentView from "@/views/userCenter/pages/commentView";
 import CommentWait from "@/views/userCenter/pages/commentWait";
+import CONSTANT from "@/util/constant";
 
 
 export default function UserCenter(){
@@ -80,7 +80,7 @@ export default function UserCenter(){
             <div className="app-header backstage-top">
                 <h2 className="title white">校园博客系统</h2>
                 <div className="avatar-space">
-                    <img src={avatar} className="avatar"/>
+                    <img src={CONSTANT.AVATAR_PREFIX+user.avatar} className="avatar"/>
                     <Dropdown
                         overlay={avatarMenu}>
                         <a onClick={(e) => e.preventDefault()}>

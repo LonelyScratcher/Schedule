@@ -67,9 +67,8 @@ export default function Write(){
 
         publish(blog).then(data=>{
             if (!data) return;
-            message.success('提交博客成功！').then(()=>{
-                history.push('/user-center/wait-verify')
-            })
+            message.success('提交博客成功！')
+            history.push('/user-center/wait-verify')
         })
     }
     return (

@@ -1,8 +1,14 @@
 import request from "@/util/request";
+import algRequest from "@/util/algRequest";
 
 export const uploadCover = (formData) =>{
     return request.post('/blog/uploadCover',formData)
 }
+
+export const uploadAvatar = (formData) =>{
+    return request.post('/blog/uploadAvatar',formData)
+}
+
 
 export const publish = (blog) => {
     return request.post('/blog',blog)
@@ -53,4 +59,8 @@ export const access = (params) => {
     return request.get('/blog/access',{
         params
     })
+}
+
+export const summaryContent = (data) => {
+    return algRequest.post('/blog/summary',data)
 }
