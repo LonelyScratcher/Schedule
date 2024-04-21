@@ -2,12 +2,13 @@ import './index.less'
 import {useEffect, useState} from "react";
 import CONSTANT from "@/util/constant";
 import {dateStr} from "@/util";
-import {Tag} from "antd";
+import {Modal, Tag} from "antd";
 import {useHistory} from "react-router-dom";
 import {remove, waitVerify} from "@/api/blog";
 import {message} from "antd";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
 
+const { confirm } = Modal;
 export default function WaitVerifyBlog(){
     const [blogList,setBlogList] = useState([])
     const history = useHistory()

@@ -1,9 +1,11 @@
 package com.example.blog.service;
 
-import com.example.blog.domain.pojo.User;
 import com.example.blog.domain.vo.AuthorInfo;
+import com.example.blog.domain.vo.StudentVo;
 import com.example.blog.domain.vo.UserInfo;
 import com.example.blog.domain.vo.UserLogin;
+
+import java.util.List;
 
 public interface UserService {
     UserLogin login(String username, String password);
@@ -17,4 +19,6 @@ public interface UserService {
     UserInfo getAdminInfo(int userId);
 
     void updateAdminInfo(UserInfo adminInfo);
+
+    List<StudentVo> recommendAuthor();
 }

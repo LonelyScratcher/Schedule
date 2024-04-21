@@ -2,17 +2,18 @@ package com.example.blog.controller;
 
 
 
-import com.example.blog.domain.pojo.User;
 import com.example.blog.domain.vo.AuthorInfo;
+import com.example.blog.domain.vo.StudentVo;
 import com.example.blog.domain.vo.UserInfo;
 import com.example.blog.domain.vo.UserLogin;
-import com.example.blog.exception.BusinessException;
 import com.example.blog.service.UserService;
 import com.example.blog.util.Code;
 import com.example.blog.util.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -59,6 +60,12 @@ public class UserController {
     public Result updateAdminInfo(@RequestBody UserInfo adminInfo){
         userService.updateAdminInfo(adminInfo);
         return new Result(Code.REQUEST_OK,true);
+    }
+
+    @GetMapping ("/recommendAuthor")
+    public Result recommendAuthor(){
+        List<StudentVo> authorList = userService.recommendAuthor();
+        return new Result(Code.REQUEST_OK,authorList);
     }
 
 }

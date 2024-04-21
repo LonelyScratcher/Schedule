@@ -13,7 +13,7 @@ and I want to avoid them
 I feel so tired
 */
 export default function Write(){
-    const [form,setForm] = useState({title:'title',tagName:'前端'})
+    const [form,setForm] = useState({title:'',tagName:'前端'})
     const [simplemde,setSimplemde] = useState(null)
     const [coverUrl,setCoverUrl] = useState("")
     const {state} = useLocation()
@@ -47,7 +47,15 @@ export default function Write(){
         {
             value: '后端',
             label: '后端',
-        }
+        },
+        {
+            value: '移动开发',
+            label: '移动开发',
+        },
+        {
+            value: '人工智能',
+            label: '人工智能',
+        },
     ]
 
     const handleChangeValue = (value,name) =>{

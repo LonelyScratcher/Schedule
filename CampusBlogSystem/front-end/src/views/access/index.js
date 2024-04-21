@@ -13,6 +13,8 @@ import {Button, Drawer, message} from "antd";
 import {getAuthorInfo} from "@/api/user";
 import {access, summaryContent} from "@/api/blog";
 import {blogOwn, insert} from "@/api/comment";
+import CONSTANT from "@/util/constant";
+import View from "@/components/icons/view";
 
 const generalAttr = [
     {name:'博客数', value:0},
@@ -27,13 +29,14 @@ export default function Access(){
     const {state} = useLocation()
     const [open, setOpen] = useState(false);
     const blog = state?.blog || {title:'',content:'',tagName:'',
-        date:'',author:'',goodNum:0,commentNum:0,good:false}
+        date:'',author:'',goodNum:0,commentNum:0,good:false,avatarUrl:avatar}
     const [authorInfo,setAuthorInfo] = useState(initAuthorInfo)
     const {generalAttr,detailAttr} = authorInfo;
     const [commentInput,setCommentInput] = useState("");
     const [commentList,setCommentList] = useState([])
     const [summary,setSummary] = useState("")
     const isSummary = false;
+    const user = getUser()
     useEffect(()=>{
         document.getElementById('md-body').innerHTML = marked.parse(blog.content);
     },[])
@@ -59,7 +62,6 @@ export default function Access(){
     useEffect(()=>{
         if (!isSummary) return
         const content = blog.content.replace(/\s|#/g, '');
-        console.log(content)
         summaryContent({content}).then(data=>{
             setSummary(data.content)
         })
@@ -106,7 +108,7 @@ export default function Access(){
                         <div className="access-left-container">
                             <div className="author-container">
                                 <div className="avatar-container">
-                                    <img src={avatar} alt="头像"/>
+                                    <img src={CONSTANT.AVATAR_PREFIX+blog.avatarUrl} alt="头像"/>
                                     <span>{blog.author}</span>
                                 </div>
                                 <div className="general-attr">
@@ -150,6 +152,7 @@ export default function Access(){
                                     <Good goodNum={blog.goodNum} isGood={blog.good} blogId={blog.id}/>
                                     <Collection/>
                                     <Comment commentNum={blog.commentNum}/>
+                                    <View viewNum={blog.access}/>
                                 </div>
                             </div>
                             <div className="comment-container">
@@ -158,7 +161,7 @@ export default function Access(){
                                 {
                                     commentList.length>0&&
                                     <>
-                                        <img src={avatar}/>
+                                        <img src={CONSTANT.AVATAR_PREFIX+commentList[0].avatarUrl}/>
                                         <span className="username">{commentList[0].author}</span>
                                         <span className="content">{commentList[0].content}</span>
                                     </>
@@ -172,7 +175,7 @@ export default function Access(){
             <Drawer width={450} title={`评论 ${commentList.length}`} placement="right" onClose={onClose} open={open}>
                 <div className="right-comment-container">
                     <div className="comment-input-area">
-                        <img src={avatar}/>
+                        <img src={CONSTANT.AVATAR_PREFIX+user.avatarUrl}/>
                         <div className="input-area">
                             <textarea value={commentInput} onChange={handleInput}/>
                             <div className="footer">
@@ -183,7 +186,7 @@ export default function Access(){
                     {
                         commentList.map(item=>(
                             <div className="comment-item">
-                                <img src={avatar}/>
+                                <img src={CONSTANT.AVATAR_PREFIX+item.avatarUrl}/>
                                 <div className="comment-detail">
                                     <span className="username">{item.author}</span>
                                     <span className="content">{item.content}</span>

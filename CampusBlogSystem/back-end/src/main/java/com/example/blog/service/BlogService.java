@@ -2,6 +2,7 @@ package com.example.blog.service;
 
 import com.example.blog.domain.pojo.Blog;
 import com.example.blog.domain.vo.BlogVo;
+import com.example.blog.domain.vo.PageVo;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface BlogService {
 
     List<Blog> waitVerify(int userId);
 
-    List<BlogVo> list(int curUserId);
+    PageVo<BlogVo> list(int curUserId, int pageNum,String tagName);
 
     List<Blog> searchText(String searchText);
 
@@ -23,4 +24,6 @@ public interface BlogService {
     void remove(int blogId);
 
     List<BlogVo> browseList();
+
+    List<Blog> pageList(int pageNum);
 }

@@ -4,8 +4,10 @@ import AvatarUpload from "@/views/userCenter/pages/home/components/AvatarUpload"
 import './index.less'
 import {Button, Input, message} from "antd";
 import {getUserInfo, updateUserInfo} from "@/api/user";
+import {getUser, saveUser} from "@/util";
 
-export default function UserHome(){
+export default function UserHome(props){
+    const {updateUser} = props
     const [isEdit,setIsEdit] = useState(false);
     const templeUser = {
         username:'',
@@ -37,6 +39,15 @@ export default function UserHome(){
         updateUserInfo(prepareInfo).then(data=>{
             if (!data) return
             message.success('更新用户信息成功！')
+            const {username,avatarUrl} = prepareInfo
+            updateUser('username',username)
+            updateUser('avatarUrl',avatarUrl)
+
+            let newUser = getUser()
+            newUser.username = username
+            newUser.avatarUrl = avatarUrl
+            saveUser(newUser)
+
             getUserInfo().then(data=>{
                 if (!data) return
                 setUserInfo(data)

@@ -11,15 +11,28 @@ import VerifyCheck from "@/views/adminCenter/pages/verifyCheck";
 import CommentVerify from "@/views/adminCenter/pages/commentVerify";
 import CommentBrowse from "@/views/adminCenter/pages/commentBrowse";
 import CONSTANT from "@/util/constant";
+import {useState} from "react";
 
 
 export default function AdminCenter(){
     const history = useHistory()
-    const user = getUser()
-    const homePath = "/admin-center/comment-verify"
+    const userObj = getUser()
+    const homePath = '/admin-center/home'
+    const [user,setUser] = useState(userObj)
+    const [selectedKey,setSelectedKey] = useState(homePath)
+
     const goHome = (e) =>{
         e.preventDefault()
         history.push('/home')
+    }
+
+    const updateUser= (name,value) =>{
+        setUser(preUser=>(
+            {
+                ...preUser,
+                [name]:value
+            }
+        ))
     }
 
     const loginOut = (e) =>{
@@ -30,6 +43,7 @@ export default function AdminCenter(){
         return res
     }
     const handleClickMenu = (e) => {
+        setSelectedKey(e.key)
         history.push(e.key)
     }
     //data
@@ -80,7 +94,7 @@ export default function AdminCenter(){
             <div className="app-header backstage-top">
                 <h2 className="title white">校园博客系统</h2>
                 <div className="avatar-space">
-                    <img src={CONSTANT.AVATAR_PREFIX+user.avatar} className="avatar"/>
+                    <img src={CONSTANT.AVATAR_PREFIX+user.avatarUrl} className="avatar"/>
                     <Dropdown
                         overlay={avatarMenu}>
                         <a onClick={(e) => e.preventDefault()}>
@@ -100,7 +114,7 @@ export default function AdminCenter(){
                             width: 256,
                             height:'100%'
                         }}
-                        defaultOpenKeys={['sub1']}
+                        selectedKeys={[selectedKey]}
                         mode="inline"
                         items={navMenuItems}
                         onClick={handleClickMenu}
@@ -111,7 +125,7 @@ export default function AdminCenter(){
                         <Redirect to={homePath}/>
                     </Route>
                     <Route path="/admin-center/home">
-                        <AdminHome/>
+                        <AdminHome updateUser={updateUser}/>
                     </Route>
                     <Route path="/admin-center/browse-blog">
                         <BrowseBlog/>

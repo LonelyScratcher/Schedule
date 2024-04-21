@@ -10,17 +10,30 @@ import Write from "@/views/userCenter/pages/write";
 import CommentView from "@/views/userCenter/pages/commentView";
 import CommentWait from "@/views/userCenter/pages/commentWait";
 import CONSTANT from "@/util/constant";
+import {useState} from "react";
 
 
 export default function UserCenter(){
     const history = useHistory()
-    const user = getUser()
-    const homePath = "/user-center/published"
+    const userObj = getUser()
+    const homePath = "/user-center/home"
+    const [user,setUser] = useState(userObj)
+    const [selectedKey,setSelectedKey] = useState(homePath)
 
     const goHome = (e) =>{
         e.preventDefault()
         history.push('/home')
     }
+
+    const updateUser= (name,value) =>{
+        setUser(preUser=>(
+            {
+                ...preUser,
+                [name]:value
+            }
+        ))
+    }
+
     const loginOut = (e) =>{
         e.preventDefault()
         removeUser()
@@ -29,6 +42,7 @@ export default function UserCenter(){
         return res
     }
     const handleClickMenu = (e) => {
+        setSelectedKey(e.key)
         history.push(e.key)
     }
     //data
@@ -80,7 +94,7 @@ export default function UserCenter(){
             <div className="app-header backstage-top">
                 <h2 className="title white">校园博客系统</h2>
                 <div className="avatar-space">
-                    <img src={CONSTANT.AVATAR_PREFIX+user.avatar} className="avatar"/>
+                    <img src={CONSTANT.AVATAR_PREFIX+user.avatarUrl} className="avatar"/>
                     <Dropdown
                         overlay={avatarMenu}>
                         <a onClick={(e) => e.preventDefault()}>
@@ -100,8 +114,7 @@ export default function UserCenter(){
                             width: 256,
                             height:'100%'
                         }}
-                        defaultOpenKeys={['sub1']}
-                        selectedKeys={[1]}
+                        selectedKeys={[selectedKey]}
                         mode="inline"
                         items={navMenuItems}
                         onClick={handleClickMenu}
@@ -112,7 +125,7 @@ export default function UserCenter(){
                         <Redirect to={homePath}/>
                     </Route>
                     <Route path="/user-center/home">
-                        <UserHome/>
+                        <UserHome updateUser={updateUser}/>
                     </Route>
                     <Route path="/user-center/published">
                         <Published/>

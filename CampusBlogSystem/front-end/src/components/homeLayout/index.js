@@ -3,9 +3,10 @@ import './index.less'
 import {Redirect, useHistory, useLocation} from "react-router-dom";
 import avatar from '@/assets/images/avatar.jpg'
 import {DownOutlined} from "@ant-design/icons";
-import {getUser, removeUser} from "@/util";
-import {useState} from "react";
+import {getUser, removeUser, saveUser} from "@/util";
+import {useEffect, useState} from "react";
 import CONSTANT from "@/util/constant";
+import {getUserInfo} from "@/api/user";
 
 export default function HomeLayout(props){
     const {state} = useLocation()
@@ -82,7 +83,7 @@ export default function HomeLayout(props){
                 {
                     isLogin&&(
                         <div className="avatar-space">
-                            <img src={CONSTANT.AVATAR_PREFIX+user.avatar} className="avatar"/>
+                            <img src={CONSTANT.AVATAR_PREFIX+user.avatarUrl} className="avatar"/>
                             <Dropdown overlay={menu}>
                                 <a onClick={(e) => e.preventDefault()}>
                                     <Space>

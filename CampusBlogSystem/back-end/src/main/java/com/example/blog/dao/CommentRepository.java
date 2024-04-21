@@ -3,6 +3,7 @@ package com.example.blog.dao;
 import com.example.blog.domain.pojo.Comment;
 import com.example.blog.domain.pojo.Good;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     public int countByBlogId(int blogId);
 
     public List<Comment> findByState(int state);
+    @Transactional
+    public void removeByBlogId(int blogId);
 }

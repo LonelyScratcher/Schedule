@@ -4,13 +4,14 @@ import {useEffect, useState} from "react";
 import {verifyList} from "@/api/adminBlog";
 import CONSTANT from "@/util/constant";
 import {dateStr} from "@/util";
-import {message, Tag} from "antd";
+import {message, Tag, Modal} from "antd";
 import {useHistory} from "react-router-dom";
 import {item, remove, publishList, waitVerify} from "@/api/blog";
 import {ExclamationCircleOutlined} from "@ant-design/icons";
 import View from "@/components/icons/view";
 import FixedGood from "@/components/icons/good/fixed";
 import Comment from "@/components/icons/comment";
+const { confirm } = Modal;
 export default function Published(){
     const [blogList,setBlogList] = useState([])
     const history = useHistory()

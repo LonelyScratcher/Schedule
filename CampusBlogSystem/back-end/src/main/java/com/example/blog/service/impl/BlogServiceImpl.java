@@ -4,11 +4,15 @@ import java.util.Date;
 import com.example.blog.dao.*;
 import com.example.blog.domain.pojo.*;
 import com.example.blog.domain.vo.BlogVo;
+import com.example.blog.domain.vo.PageVo;
 import com.example.blog.exception.BusinessException;
 import com.example.blog.service.BlogService;
 import com.example.blog.util.Code;
 import com.example.blog.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -57,10 +61,11 @@ public class BlogServiceImpl implements BlogService {
             if (user==null || student== null) throw new BusinessException(Code.BUSINESS_ERR,"查询博客数据错误！");
             String username = user.getUsername();
             String author = student.getName();
+            String avatarUrl = student.getAvatarUrl();
             int goodNum = goodRepository.countByBlogId(id);
             int commentNum = commentRepository.countByBlogIdAndState(id, APPROVED_ADOPT);
 
-            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, goodNum, commentNum, false);
+            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, avatarUrl, goodNum, commentNum, false);
             blogVoList.add(blogVo);
         }
         return blogVoList;
@@ -86,10 +91,11 @@ public class BlogServiceImpl implements BlogService {
             if (user==null || student== null) throw new BusinessException(Code.BUSINESS_ERR,"查询博客数据错误！");
             String username = user.getUsername();
             String author = student.getName();
+            String avatarUrl = student.getAvatarUrl();
             int goodNum = goodRepository.countByBlogId(id);
             int commentNum = commentRepository.countByBlogIdAndState(id, APPROVED_ADOPT);
 
-            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, goodNum, commentNum, false);
+            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, avatarUrl, goodNum, commentNum, false);
             blogVoList.add(blogVo);
         }
         return blogVoList;
@@ -102,8 +108,14 @@ public class BlogServiceImpl implements BlogService {
 
 
     @Override
-    public List<BlogVo> list(int curUserId) {
-        List<Blog> blogList = blogRepository.findBlogsByState(APPROVED_ADOPT);
+    public PageVo<BlogVo> list(int curUserId,int pageNum,String tagName) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "date");
+        PageRequest pageRequest = PageRequest.of(pageNum, 6,sort);
+        if (tagName.equals("全部")) tagName = "";
+        Page<Blog> pageBlog = blogRepository.findByStateAndTagNameContains(APPROVED_ADOPT,tagName,pageRequest);
+        PageVo<BlogVo> pageVo = new PageVo<>();
+        int totalPage = pageBlog.getTotalPages();
+        List<Blog> blogList = pageBlog.getContent();
         List<BlogVo> blogVoList = new ArrayList<>();
         for (Blog blog:blogList){
             Integer id = blog.getId();
@@ -111,7 +123,6 @@ public class BlogServiceImpl implements BlogService {
             Date date = blog.getDate();
             String title = blog.getTitle();
             String content = blog.getContent();
-            String tagName = blog.getTagName();
             String coverUrl = blog.getCoverUrl();
             int access = blog.getAccess();
             int state = blog.getState();
@@ -121,14 +132,24 @@ public class BlogServiceImpl implements BlogService {
             if (user==null || student== null) throw new BusinessException(Code.BUSINESS_ERR,"查询博客数据错误！");
             String username = user.getUsername();
             String author = student.getName();
+            String avatarUrl = student.getAvatarUrl();
 
             int goodNum = goodRepository.countByBlogId(id);
             boolean isGood = goodRepository.existsByBlogIdAndUserId(id,curUserId);
             int commentNum = commentRepository.countByBlogIdAndState(id, APPROVED_ADOPT);
-            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, goodNum, commentNum, isGood);
+            BlogVo blogVo = new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, avatarUrl, goodNum, commentNum, isGood);
             blogVoList.add(blogVo);
         }
-        return blogVoList;
+        pageVo.setList(blogVoList);
+        pageVo.setTotalPage(totalPage);
+        return pageVo;
+    }
+
+
+    @Override
+    public List<Blog> pageList(int pageNum) {
+
+        return null;
     }
 
     @Override
@@ -150,11 +171,12 @@ public class BlogServiceImpl implements BlogService {
         if (user==null || student== null) throw new BusinessException(Code.BUSINESS_ERR,"查询博客数据错误！");
         String username = user.getUsername();
         String author = student.getName();
+        String avatarUrl = student.getAvatarUrl();
 
         int goodNum = goodRepository.countByBlogId(blogId);
         boolean isGood = goodRepository.existsByBlogIdAndUserId(id,curUserId);
         int commentNum = commentRepository.countByBlogIdAndState(id, APPROVED_ADOPT);
-        return new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, goodNum, commentNum, isGood);
+        return new BlogVo(id, userId, date, title, content, tagName, coverUrl, state, access, username, author, avatarUrl, goodNum, commentNum, isGood);
 
     }
 
@@ -165,6 +187,8 @@ public class BlogServiceImpl implements BlogService {
         if (blog.getState()==Constant.APPROVED_REFUSE){
             Audit audit = auditRepository.findByBlogId(blogId);
             auditRepository.deleteById(audit.getId());
+        }else if (blog.getState()== APPROVED_ADOPT){
+            commentRepository.removeByBlogId(blogId);
         }
         blogRepository.deleteById(blogId);
     }

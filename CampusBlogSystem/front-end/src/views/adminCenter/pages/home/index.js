@@ -2,9 +2,11 @@ import {useEffect, useState} from "react";
 import AvatarUpload from "@/views/userCenter/pages/home/components/AvatarUpload";
 import {Button, Input, message} from "antd";
 import {getAdminInfo, getUserInfo, updateAdminInfo, updateUserInfo} from "@/api/user";
+import {getUser, saveUser} from "@/util";
 
-export default function UserHome(){
+export default function UserHome(props){
     const [isEdit,setIsEdit] = useState(false);
+    const {updateUser} = props
     const templeUser = {
         username:'',
         name:'',
@@ -35,6 +37,15 @@ export default function UserHome(){
         updateAdminInfo(prepareInfo).then(data=>{
             if (!data) return
             message.success('更新管理员信息成功！')
+            const {username,avatarUrl} = prepareInfo
+            updateUser('username',username)
+            updateUser('avatarUrl',avatarUrl)
+
+            let newUser = getUser()
+            newUser.username = username
+            newUser.avatarUrl = avatarUrl
+            saveUser(newUser)
+
             getAdminInfo().then(data=>{
                 if (!data) return
                 setUserInfo(data)

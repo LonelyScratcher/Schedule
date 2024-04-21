@@ -24,6 +24,7 @@ public class BlogVo {
 
     private String username;
     private String author;
+    private String avatarUrl;
 
     private int goodNum;
     private int commentNum;

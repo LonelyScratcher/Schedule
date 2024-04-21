@@ -37,7 +37,7 @@ export default function CommentBrowse(){
                 remove({commentId:comment.id}).then(data=>{
                     if (!data) return
                     message.success('删除评论成功！')
-                    list().then(data=>{
+                    browseList().then(data=>{
                         setCommentList(data)
                     })
                 })
@@ -60,7 +60,7 @@ export default function CommentBrowse(){
         update(comment).then(data=>{
             if (!data) return
             message.success('更新评论成功！')
-            list().then(data=>{
+            browseList().then(data=>{
                 setCommentList(data)
             })
             setIsUpdateOpen(false);

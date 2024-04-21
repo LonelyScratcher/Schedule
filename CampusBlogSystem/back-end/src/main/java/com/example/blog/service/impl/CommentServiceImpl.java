@@ -31,6 +31,8 @@ public class CommentServiceImpl implements CommentService {
     StudentRepository studentRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    AdminRepository adminRepository;
     @Override
     public void insertComment(Comment comment) {
         commentRepository.save(comment);
@@ -69,12 +71,22 @@ public class CommentServiceImpl implements CommentService {
         Blog blog = blogRepository.findById(blogId).orElse(null);
         if (blog == null) throw new BusinessException(Code.BUSINESS_ERR,"查询评论数据失败！");
         String blogTitle = blog.getTitle();
+        Admin admin = adminRepository.findById(userId).orElse(null);
         Student student = studentRepository.findById(userId).orElse(null);
         User user = userRepository.findById(userId).orElse(null);
-        String author = student != null ? student.getName() : "";
+        String author = "";
+        String avatarUrl = "user.jpg";
+        if (admin!=null) {
+            author = admin.getName();
+            avatarUrl = admin.getAvatarUrl();
+        }
+        if (student!=null){
+            author = student.getName();
+            avatarUrl = student.getAvatarUrl();
+        }
         String username = user != null ? user.getUsername() : "";
 
-        return new CommentVo(id, blogId, userId, state, content, blogTitle, date,author,username);
+        return new CommentVo(id, blogId, userId, state, content, blogTitle, date, author, username, avatarUrl);
     }
 
     @Override
@@ -173,6 +185,13 @@ public class CommentServiceImpl implements CommentService {
             commentVoList.add(commentVo);
         }
         return commentVoList;
+    }
+
+    @Override
+    public String reason(int commentId) {
+        CommentAudit commentAudit = commentAuditRepository.findByCommentId(commentId);
+        if (commentAudit==null) throw new BusinessException(Code.BUSINESS_ERR,"查询审核拒绝理由失败！");
+        return commentAudit.getReason();
     }
 
 }

@@ -27,3 +27,7 @@ export const updateUserInfo = (data) =>{
 export const updateAdminInfo = (data) =>{
     return request.put('/user/adminInfo',data)
 }
+
+export const recommendAuthor = () =>{
+    return request.get('/user/recommendAuthor')
+}

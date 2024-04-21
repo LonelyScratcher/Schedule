@@ -33,5 +33,6 @@ public interface CommentService {
 
     List<CommentVo> blogOwn(int blogId);
 
+    String reason(int commentId);
 }
 

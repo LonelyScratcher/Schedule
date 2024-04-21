@@ -18,4 +18,5 @@ public class CommentVo {
     Date date;
     String author;
     String username;
+    String avatarUrl;
 }

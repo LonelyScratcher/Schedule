@@ -4,6 +4,7 @@ package com.example.blog.controller;
 import com.example.blog.dao.BlogRepository;
 import com.example.blog.domain.pojo.Blog;
 import com.example.blog.domain.vo.BlogVo;
+import com.example.blog.domain.vo.PageVo;
 import com.example.blog.exception.BusinessException;
 import com.example.blog.service.BlogService;
 import com.example.blog.util.Code;
@@ -67,13 +68,16 @@ public class BlogController {
     }
 
     //fetch list of blog with author describe
+    //add page able
     @GetMapping("/list")
-    public Result list(HttpServletRequest request){
+    public Result list(HttpServletRequest request,
+                       @RequestParam("pageNum") int pageNum,
+                       @RequestParam("tagName") String tagName){
         String userIdStr = request.getHeader("userId");
         int userId = 0;
         if (userIdStr != null) userId = Integer.parseInt(userIdStr);
-        List<BlogVo> blogVoList = blogService.list(userId);
-        return new Result(Code.REQUEST_OK,blogVoList);
+        PageVo<BlogVo> pageVo = blogService.list(userId,pageNum,tagName);
+        return new Result(Code.REQUEST_OK,pageVo);
     }
 
     //fetch blog item with author describe

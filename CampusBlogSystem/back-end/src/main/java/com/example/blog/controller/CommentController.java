@@ -102,4 +102,10 @@ public class CommentController {
         return new Result(Code.REQUEST_OK,commentVoList);
     }
 
+    @GetMapping("/reason")
+    public Result reason(@RequestParam("commentId") int commentId){
+        String reason = commentService.reason(commentId);
+        return new Result(Code.REQUEST_OK,reason);
+    }
+
 }

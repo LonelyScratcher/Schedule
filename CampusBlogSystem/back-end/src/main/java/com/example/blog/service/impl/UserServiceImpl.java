@@ -5,10 +5,7 @@ import com.example.blog.domain.pojo.Admin;
 import com.example.blog.domain.pojo.Blog;
 import com.example.blog.domain.pojo.Student;
 import com.example.blog.domain.pojo.User;
-import com.example.blog.domain.vo.AuthorInfo;
-import com.example.blog.domain.vo.InfoItem;
-import com.example.blog.domain.vo.UserInfo;
-import com.example.blog.domain.vo.UserLogin;
+import com.example.blog.domain.vo.*;
 import com.example.blog.exception.BusinessException;
 import com.example.blog.service.UserService;
 import com.example.blog.util.Code;
@@ -16,7 +13,10 @@ import com.example.blog.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -164,5 +164,30 @@ public class UserServiceImpl implements UserService {
         admin.setAvatarUrl(avatarUrl);
         userRepository.save(user);
         adminRepository.save(admin);
+    }
+
+    @Override
+    public List<StudentVo> recommendAuthor() {
+        List<Student> students = studentRepository.findAll();
+        List<StudentVo> studentVoList = new ArrayList<>();
+        for (Student student:students){
+            StudentVo studentVo = plusStudent(student);
+            studentVoList.add(studentVo);
+        }
+        return studentVoList.stream()
+                .sorted(Comparator.comparingInt(StudentVo::getGoodNum).reversed())
+                .limit(4)
+                .collect(Collectors.toList());
+    }
+    private StudentVo plusStudent(Student student){
+        int goodNum = 0;
+        int userId = student.getId();
+        Integer id = student.getId();
+        String name = student.getName();
+        String avatarUrl = student.getAvatarUrl();
+        String description = student.getDescription();
+        List<Blog> blogList = blogRepository.findBlogsByUserIdAndState(userId,Constant.APPROVED_ADOPT);
+        for(Blog blog:blogList) goodNum+=goodRepository.countByBlogId(blog.getId());
+        return new StudentVo(id, name, avatarUrl, description, goodNum);
     }
 }

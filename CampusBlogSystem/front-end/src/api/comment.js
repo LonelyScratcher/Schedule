@@ -57,3 +57,8 @@ export const blogOwn = (params) =>{
         params
     })
 }
+export const reason = (params) =>{
+    return request.get('/comment/reason', {
+        params
+    })
+}

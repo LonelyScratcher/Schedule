@@ -4,9 +4,9 @@ import CONSTANT from "@/util/constant";
 import {useHistory} from "react-router-dom";
 import {dateStr} from "@/util";
 import {useEffect, useState} from "react";
-import {list, remove, rewrite} from "@/api/comment";
+import {list, reason, remove, rewrite} from "@/api/comment";
 import TextArea from "antd/es/input/TextArea";
-import {ExclamationCircleOutlined} from "@ant-design/icons";
+import {ExclamationCircleOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import {item} from "@/api/blog";
 const VERIFY = CONSTANT.VERIFY
 const stateTag = (state) =>{
@@ -67,6 +67,19 @@ export default function CommentWait(){
             },
             onCancel() {},
         });
+    };
+
+    const showReason = (comment) => {
+        reason({commentId:comment.id}).then(data=>{
+            if (!data) return
+            confirm({
+                title: '拒绝理由',
+                icon: <InfoCircleOutlined />,
+                content: data,
+                okText:"确认",
+                cancelText:"取消"
+            });
+        })
     };
 
     const hideRemove = () => {
@@ -150,6 +163,14 @@ export default function CommentWait(){
                             e.preventDefault()
                             showRemove(comment)
                         }}>删除</a>
+                        {
+                            comment.state===VERIFY.APPROVED_REFUSE&&(
+                                <a onClick={(e)=>{
+                                    e.preventDefault()
+                                    showReason(comment)
+                                }}>详情</a>
+                            )
+                        }
                     </Space>
                 )
             },

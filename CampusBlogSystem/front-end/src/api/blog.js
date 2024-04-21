@@ -32,8 +32,10 @@ export const remove = (params) => {
     })
 }
 
-export const list = () => {
-    return request.get('/blog/list')
+export const list = (params) => {
+    return request.get('/blog/list',{
+        params
+    })
 }
 
 export const item = (params) => {

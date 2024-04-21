@@ -5,7 +5,7 @@ import {uploadCover} from "@/api/blog";
 import CODE from "@/util/code";
 import CONSTANT from "@/util/constant";
 
-const AvatarUpload = (props) => {
+const CoverUpload = (props) => {
     const {coverUrl,setCoverUrl} = props
     const uploadProps = {
         customRequest: info => {//手动上传
@@ -49,6 +49,7 @@ const AvatarUpload = (props) => {
         <>
             {/*action return ...*/}
             <Upload
+                listType="picture-card"
                 showUploadList={false}
                 {...uploadProps}
             >
@@ -57,4 +58,4 @@ const AvatarUpload = (props) => {
         </>
     );
 };
-export default AvatarUpload;
+export default CoverUpload;

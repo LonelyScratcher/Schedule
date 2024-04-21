@@ -60,7 +60,7 @@ export default function VerifyDetail(){
             </p>
             <div className="row-item">
                 <span>博客封面：</span>
-                <img src={CONSTANT.COVER_PREFIX+state.coverUrl}/>
+                <img className="cover" src={CONSTANT.COVER_PREFIX+state.coverUrl}/>
             </div>
             <p className="row-text">
                 <span>正文内容：</span>

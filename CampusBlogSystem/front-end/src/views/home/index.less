@@ -17,13 +17,13 @@
             background-color: #FFFFFF;
             width: 100%;
             span {
+                cursor: pointer;
                 width: max-content;
                 padding: 20px;
                 display: inline-block;
                 text-align: center;
-
                 &.selected {
-                    color: red;
+                    color: #FC5531;
                 }
             }
         }
@@ -53,6 +53,7 @@
                     }
                     .item-footer{
                         display: flex;
+                        align-items: center;
                         .username{
                             margin-left: 15px;
                         }
@@ -80,6 +81,10 @@
 
                 }
             }
+            .page-container{
+                margin-top: 20px;
+                text-align: center;
+            }
         }
         .author-list{
             height: max-content;
@@ -97,7 +102,7 @@
                 width: 100%;
                 box-sizing: border-box;
                 padding-left: 15px;
-                margin: 15px 0;
+                margin: 15px 0 25px 0;
                 display: flex;
                 align-items: center;
                 .author-info{
